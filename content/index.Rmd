@@ -1,0 +1,42 @@
+---
+title: "About R Markdown"
+output: 
+  html_document: 
+    toc: false
+---
+
+<style type="text/css">
+.title {
+  display: none;
+}
+
+#getting-started img {
+  margin-right: 10px;
+}
+
+</style>
+
+<div class="row" style="padding-top: 30px; width: 80%">
+<!--div class="col-sm-6"-->
+
+# **mrgsolve Vignettes**
+
+mrgsolve is an R package for simulation from hierarchical, ordinary differential 
+equation (ODE) based models typically employed in drug development.
+
+This website contains (hopefully) helpful vignettes to help you learn and 
+use mrgsolve to get your simulation work done.  
+
+
+# **Other Resources**
+
+See also:
+
+- The main mrgsolve help page: https://mrgsolve.github.io
+- The user guide: https://mrgsolve.github.io/user_guide
+- Issue tracker for asking questions or reporting bugs: 
+  https://github.com/metrumresearchgroup/mrgsolve/issues
+
+
+
+</div>

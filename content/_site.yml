@@ -1,0 +1,17 @@
+name: "mrgsolve-vignettes"
+output_dir: ../docs
+navbar:
+  title: "<div class = mrgg>mrgsolve::vignettes</div>"
+  left:
+    - text: "Home"
+      href: index.html
+    - text: "Get Started"
+      href: 01-get-started.html
+output: 
+  html_document: 
+    theme: default
+    highlight: pygments
+    css: styles.css
+    toc: true
+    toc_float: true
+    number_sections: true
