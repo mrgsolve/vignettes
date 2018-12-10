@@ -164,15 +164,26 @@ $(document).ready(function () {
     </div>
     <div id="navbar" class="navbar-collapse collapse">
       <ul class="nav navbar-nav">
-        <li>
-  <a href="index.html">Home</a>
-</li>
-<li>
-  <a href="01-get-started.html">Get Started</a>
+        <li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+    Get Started
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="01-get-started.html">Quick Start</a>
+    </li>
+  </ul>
 </li>
       </ul>
       <ul class="nav navbar-nav navbar-right">
-        
+        <li>
+  <a href="https://mrgsolve.github.io">mrgsolve.github.io</a>
+</li>
+<li>
+  <a href="https://github.com/metrumresearchgroup/mrgsolve">GitHub</a>
+</li>
       </ul>
     </div><!--/.nav-collapse -->
   </div><!--/.container -->

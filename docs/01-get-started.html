@@ -331,15 +331,26 @@ div.tocify {
     </div>
     <div id="navbar" class="navbar-collapse collapse">
       <ul class="nav navbar-nav">
-        <li>
-  <a href="index.html">Home</a>
-</li>
-<li>
-  <a href="01-get-started.html">Get Started</a>
+        <li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+    Get Started
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="01-get-started.html">Quick Start</a>
+    </li>
+  </ul>
 </li>
       </ul>
       <ul class="nav navbar-nav navbar-right">
-        
+        <li>
+  <a href="https://mrgsolve.github.io">mrgsolve.github.io</a>
+</li>
+<li>
+  <a href="https://github.com/metrumresearchgroup/mrgsolve">GitHub</a>
+</li>
       </ul>
     </div><!--/.nav-collapse -->
   </div><!--/.container -->
@@ -369,7 +380,7 @@ div.tocify {
 . -------- mrgsolve model object (unix) --------
 .   Project: /Users/kyleb/Rli...gsolve/models
 .   source:        pk1.cpp
-.   shared object: pk1-so-b9e74948612 
+.   shared object: pk1-so-1dae5ad1e986 
 . 
 .   Time:          start: 0 end: 24 delta: 1
 .   &gt;              add: &lt;none&gt;
