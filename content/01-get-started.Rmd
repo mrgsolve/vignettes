@@ -1,6 +1,5 @@
 ---
 title: "Quick Start"
-output: html_document
 ---
 
 ```{r setup, echo = FALSE, message = FALSE, warning = FALSE,code = readLines("global.R")}

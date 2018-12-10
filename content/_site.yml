@@ -15,7 +15,7 @@ navbar:
     - text: "GitHub"
       href: https://github.com/metrumresearchgroup/mrgsolve
 output: 
-    html_document: 
+    html_document:
       theme: default
       highlight: pygments
       css: styles.css
