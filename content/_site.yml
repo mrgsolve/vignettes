@@ -6,7 +6,9 @@ navbar:
     - text: "Get Started"
       menu: 
       - text: "Quick Start"
-        href: 01-get-started.html
+        href: "01-get-started.html"
+      - text: "Event Objects"
+        href: "events.html"
   right:
     - text: "mrgsolve.github.io"
       href: https://mrgsolve.github.io
