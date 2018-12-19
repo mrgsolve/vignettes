@@ -4,6 +4,7 @@ output: html_document
 ---
 
 ```{r setup, echo = FALSE, message = FALSE, warning = FALSE,code = readLines("global.R")}
+knitr::opts_chunk$set(cache = TRUE, autodep = TRUE)
 ```
 
 This vignette introduces a new formal code block for writing models
@@ -25,7 +26,7 @@ As a most-basic model, we look at the `pred1` model in `modlib()`
 
 ```{r}
 library(mrgsolve)
-mod <- mread("pred1", modlib())
+mod <- mread_cache("pred1", modlib())
 ```
 
 
@@ -104,7 +105,7 @@ capture Y = E0*(1+EMAX*AUC/(AUC50+AUC))+EPS(1);
 
 
 ```{r}
-mod <- mcode("pkpd", code)
+mod <- mcode_cache("pkpd", code)
 ```
 
 To simulate, look at 50 subjects at each of 5 doses

@@ -1,8 +1,10 @@
 ---
 title: "Quick Start"
+output: html_document
 ---
 
 ```{r setup, echo = FALSE, message = FALSE, warning = FALSE,code = readLines("global.R")}
+knitr::opts_chunk$set(cache = TRUE, autodep=TRUE)
 mod <- mread_cache("pk1", modlib())
 mod <- mread_cache("pk2", modlib())
 ```
