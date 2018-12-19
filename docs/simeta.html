@@ -11,7 +11,7 @@
 
 
 
-<title>Quick Start</title>
+<title>Resimulate random effect variates on demand</title>
 
 <script src="site_libs/jquery-1.11.3/jquery.min.js"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -481,84 +481,170 @@ div.tocify {
 
 
 
-<h1 class="title toc-ignore">Quick Start</h1>
+<h1 class="title toc-ignore">Resimulate random effect variates on demand</h1>
 
 </div>
 
 
-<p>This vignette shows the user how to do their first simulation with mrgsolve.</p>
-<div id="load-a-model" class="section level1">
-<h1><span class="header-section-number">1</span> Load a model</h1>
-<p>After loading the package</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(mrgsolve)</code></pre></div>
-<p>we’ll use the <code>mread()</code> function to read, parse, compile and load a model out of the internal model libary. Try calling the modlib function (<code>modlib()</code>) and see that the path to the installed package is returned, pointing to a directory of pre-coded models. These models are good to try when learning mrgsolve.</p>
-<p>For this first example, we’re using a one compartment model (called <code>pk1</code> in the model library)</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">mod &lt;-<span class="st"> </span><span class="kw">mread_cache</span>(<span class="st">&quot;pk1&quot;</span>, <span class="kw">modlib</span>())</code></pre></div>
-<p>Once we create the model object (<code>mod</code>) we can extract certain information about the model. For example, get an overview</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">mod</code></pre></div>
-<pre><code>. 
-. 
-. -------- mrgsolve model object (unix) --------
-.   Project: /Users/kyleb/Rli...gsolve/models
-.   source:        pk1.cpp
-.   shared object: pk1-so-16bea7eb087db 
-. 
-.   Time:          start: 0 end: 24 delta: 1
-.   &gt;              add: &lt;none&gt;
-.   &gt;              tscale: 1
-. 
-.   Compartments:  EV CENT [2]
-.   Parameters:    CL V KA [3]
-.   Omega:         0x0 
-.   Sigma:         0x0 
-. 
-.   Solver:        atol: 1e-08 rtol: 1e-08
-.   &gt;              maxsteps: 5000 hmin: 0 hmax: 0</code></pre>
-<p>Or look at model parameters and their values</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">param</span>(mod)</code></pre></div>
-<pre><code>. 
-.  Model parameters (N=3):
-.  name value . name value
-.  CL   1     | V    20   
-.  KA   1     | .    .</code></pre>
-<p>We’ll see in the section below how to run a simulation from this model. But first, let’s create a dosing intervention to use with this model.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(mrgsolve)
+<span class="kw">library</span>(dplyr)</code></pre></div>
+<div id="simeta-example" class="section level1">
+<h1><span class="header-section-number">1</span> <code>simeta</code> example</h1>
+<ul>
+<li>In this example, we want to simulate a patient-specific baseline response that is between 80 and 120.</li>
+<li>In the code, we start a loop that calls <code>simeta</code> with no arguments until the baseline is between the specified bounds</li>
+<li>For this example, we only calculate <code>BASE</code> when <code>NEWIND &lt;=1</code> … or whenever we are working on the first record of an individual. This ensures that we don’t re-simulate <code>BASE</code> at every simulation record.</li>
+<li>We have also implemented a counter (<code>i</code>) that ensures we only try to resimulate 100 times. If a value for <code>BASE</code> cannot be generated in 100 tries, we give up.<br />
+</li>
+<li>You probably won’t need to implement <code>FLAG</code> for your problem. I am only using <code>FLAG</code> here so we can selectively call the <code>simeta</code> code to demonstrate how it is working.</li>
+</ul>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">code &lt;-<span class="st"> &#39;</span>
+<span class="st">$PARAM TVBASE = 100, FLAG = 0</span>
+
+<span class="st">$CMT RESPONSE</span>
+
+<span class="st">$MAIN </span>
+
+<span class="st">if(NEWIND &lt;=1) {</span>
+
+<span class="st">  capture BASE = TVBASE*exp(EBASE);</span>
+
+<span class="st">  int i = 0;</span>
+
+<span class="st">  if(FLAG &gt; 0) {</span>
+<span class="st">    while((BASE &lt; 80) || (BASE &gt; 120)) {</span>
+<span class="st">      if(++i &gt; 100) {</span>
+<span class="st">        report(&quot;There was a problem simulating BASE&quot;);</span>
+<span class="st">      }</span>
+<span class="st">      simeta();</span>
+<span class="st">      BASE = TVBASE*exp(EBASE);</span>
+<span class="st">    }</span>
+<span class="st">  }</span>
+<span class="st">  </span>
+<span class="st">  RESPONSE_0 = BASE;</span>
+<span class="st">}</span>
+
+
+<span class="st">$OMEGA @labels EBASE</span>
+<span class="st">1</span>
+
+<span class="st">$CAPTURE EBASE</span>
+<span class="st">&#39;</span></code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">mod &lt;-<span class="st"> </span><span class="kw">mcode_cache</span>(<span class="st">&quot;simeta&quot;</span>, code)</code></pre></div>
+<div id="simulate-without-simeta" class="section level2">
+<h2><span class="header-section-number">1.1</span> Simulate without <code>simeta</code></h2>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">system.time</span>({
+  out &lt;-<span class="st"> </span>mod <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">mrgsim</span>(<span class="dt">nid=</span><span class="dv">100</span>, <span class="dt">end=</span><span class="op">-</span><span class="dv">1</span>)
+  sum &lt;-<span class="st"> </span><span class="kw">summary</span>(out)
+})</code></pre></div>
+<pre><code>.    user  system elapsed 
+.   0.008   0.000   0.009</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">print</span>(sum)</code></pre></div>
+<pre><code>.        ID              time      RESPONSE            EBASE        
+.  Min.   :  1.00   Min.   :0   Min.   :   7.277   Min.   :-2.6204  
+.  1st Qu.: 25.75   1st Qu.:0   1st Qu.:  56.977   1st Qu.:-0.5625  
+.  Median : 50.50   Median :0   Median : 131.588   Median : 0.2743  
+.  Mean   : 50.50   Mean   :0   Mean   : 177.954   Mean   : 0.1634  
+.  3rd Qu.: 75.25   3rd Qu.:0   3rd Qu.: 213.699   3rd Qu.: 0.7594  
+.  Max.   :100.00   Max.   :0   Max.   :1341.236   Max.   : 2.5962  
+.       BASE         
+.  Min.   :   7.277  
+.  1st Qu.:  56.977  
+.  Median : 131.588  
+.  Mean   : 177.954  
+.  3rd Qu.: 213.699  
+.  Max.   :1341.236</code></pre>
+<p>When we simulate with <code>FLAG=0</code>, the <code>simeta</code> code <strong>isn’t</strong> called and we <code>BASE</code> values all over the place.</p>
 </div>
-<div id="create-an-intervention" class="section level1">
-<h1><span class="header-section-number">2</span> Create an intervention</h1>
-<p>The simplest way to create an intervention is to use an event object. This is just a simple expression of one or more model interventions (most frequently doses)</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">evnt &lt;-<span class="st"> </span><span class="kw">ev</span>(<span class="dt">amt =</span> <span class="dv">100</span>, <span class="dt">ii =</span> <span class="dv">24</span>, <span class="dt">addl =</span> <span class="dv">9</span>)</code></pre></div>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">evnt</code></pre></div>
-<pre><code>. Events:
-.   time cmt amt evid ii addl
-. 1    0   1 100    1 24    9</code></pre>
-<p>We’ll see in other vignettes how to create more-complicated events as well as how to create larger data sets with many individuals in them.</p>
-<p>For now, the event object is just an intervention that we can combine with a model.</p>
+<div id="simulate-with-simeta" class="section level2">
+<h2><span class="header-section-number">1.2</span> Simulate with <code>simeta</code></h2>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">system.time</span>({
+  out &lt;-<span class="st"> </span>mod <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">mrgsim</span>(<span class="dt">nid=</span><span class="dv">100</span>, <span class="dt">end=</span><span class="op">-</span><span class="dv">1</span>, <span class="dt">param=</span><span class="kw">list</span>(<span class="dt">FLAG=</span><span class="dv">1</span>))
+  sum &lt;-<span class="st"> </span><span class="kw">summary</span>(out)
+})</code></pre></div>
+<pre><code>.    user  system elapsed 
+.   0.006   0.000   0.006</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">print</span>(sum)</code></pre></div>
+<pre><code>.        ID              time      RESPONSE          EBASE          
+.  Min.   :  1.00   Min.   :0   Min.   : 80.02   Min.   :-0.222878  
+.  1st Qu.: 25.75   1st Qu.:0   1st Qu.: 89.60   1st Qu.:-0.109841  
+.  Median : 50.50   Median :0   Median :100.42   Median : 0.004215  
+.  Mean   : 50.50   Mean   :0   Mean   :100.02   Mean   :-0.006048  
+.  3rd Qu.: 75.25   3rd Qu.:0   3rd Qu.:109.18   3rd Qu.: 0.087797  
+.  Max.   :100.00   Max.   :0   Max.   :119.54   Max.   : 0.178520  
+.       BASE       
+.  Min.   : 80.02  
+.  1st Qu.: 89.60  
+.  Median :100.42  
+.  Mean   :100.02  
+.  3rd Qu.:109.18  
+.  Max.   :119.54</code></pre>
+<p>When we simulate with <code>FLAG=1</code>, the <code>simeta</code> code <strong>is</strong> called and we <code>BASE</code> values within the specified bounds.</p>
 </div>
-<div id="simulate" class="section level1">
-<h1><span class="header-section-number">3</span> Simulate</h1>
-<p>To simulate, use the <code>mrgsim()</code> function.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">out &lt;-<span class="st"> </span>mod <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">ev</span>(evnt) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">mrgsim</span>(<span class="dt">end =</span> <span class="dv">480</span>, <span class="dt">delta =</span> <span class="fl">0.1</span>)</code></pre></div>
-<p>We use a pipe sequence here (<code>%&gt;%</code>) to pass the model object (<code>mod)</code> into the event function (<code>ev()</code>) where we attach the dosing intervention, and that result gets passed into the simulation function. The result of the simulation function is essentially a data frame of simulated values</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">out</code></pre></div>
-<pre><code>. Model:  pk1 
-. Dim:    4802 x 5 
-. Time:   0 to 480 
-. ID:     1 
-.      ID time     EV   CENT     CP
-. [1,]  1  0.0   0.00  0.000 0.0000
-. [2,]  1  0.0 100.00  0.000 0.0000
-. [3,]  1  0.1  90.48  9.492 0.4746
-. [4,]  1  0.2  81.87 18.034 0.9017
-. [5,]  1  0.3  74.08 25.715 1.2858
-. [6,]  1  0.4  67.03 32.619 1.6309
-. [7,]  1  0.5  60.65 38.819 1.9409
-. [8,]  1  0.6  54.88 44.383 2.2191</code></pre>
 </div>
-<div id="plot" class="section level1">
-<h1><span class="header-section-number">4</span> Plot</h1>
-<p>mrgsolve comes with several different functions for processing output. One simple function is a plot method that will generate a plot of what was just simulated</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">plot</span>(out)</code></pre></div>
-<p><img src="01-get-started_files/figure-html/unnamed-chunk-9-1.png" width="672" /></p>
+<div id="simeps-example" class="section level1">
+<h1><span class="header-section-number">2</span> <code>simeps</code> example</h1>
+<ul>
+<li>In this example, we want to re-simulate the residual error variate to make sure we have a concentration that is positive.</li>
+<li>We set up a loop that looks like the <code>simeta</code> example, but we work in <code>$TABLE</code> this time because we are calculating <code>CP</code>.</li>
+</ul>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">code &lt;-<span class="st"> &#39;</span>
+<span class="st">$PARAM CL = 1, V = 20, FLAG=0</span>
+
+<span class="st">$SIGMA 50</span>
+
+<span class="st">$PKMODEL cmt=&quot;CENT&quot;</span>
+
+<span class="st">$TABLE</span>
+<span class="st">capture CP = CENT/V + EPS(1);</span>
+
+<span class="st">int i = 0;</span>
+<span class="st">while(CP &lt; 0 &amp;&amp; FLAG &gt; 0) {</span>
+<span class="st">  if(++i &gt; 100) {</span>
+<span class="st">    report(&quot;Problem simulating positive CP&quot;);</span>
+<span class="st">  }</span>
+<span class="st">  simeps();</span>
+<span class="st">  CP = CENT/V + EPS(1);</span>
+<span class="st">}</span>
+
+<span class="st">&#39;</span></code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">mod &lt;-<span class="st"> </span><span class="kw">mcode_cache</span>(<span class="st">&quot;simeps&quot;</span>, code)</code></pre></div>
+<div id="simulate-without-simeps" class="section level2">
+<h2><span class="header-section-number">2.1</span> Simulate without <code>simeps</code></h2>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">system.time</span>({
+  out &lt;-<span class="st"> </span>mod <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">ev</span>(<span class="dt">amt=</span><span class="dv">100</span>) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">mrgsim</span>(<span class="dt">end=</span><span class="dv">48</span>)
+  sum &lt;-<span class="st"> </span><span class="kw">summary</span>(out)
+})</code></pre></div>
+<pre><code>.    user  system elapsed 
+.   0.006   0.000   0.007</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">print</span>(sum)</code></pre></div>
+<pre><code>.        ID         time            CENT              CP          
+.  Min.   :1   Min.   : 0.00   Min.   :  0.00   Min.   :-14.5733  
+.  1st Qu.:1   1st Qu.:11.25   1st Qu.: 15.93   1st Qu.: -4.5072  
+.  Median :1   Median :23.50   Median : 29.38   Median :  0.2611  
+.  Mean   :1   Mean   :23.52   Mean   : 37.47   Mean   :  0.5186  
+.  3rd Qu.:1   3rd Qu.:35.75   3rd Qu.: 54.21   3rd Qu.:  5.3473  
+.  Max.   :1   Max.   :48.00   Max.   :100.00   Max.   : 15.6119</code></pre>
+<p><strong>Negative</strong> concentrations are simulated when we <strong>don’t</strong> call the <code>simeps</code> loop.</p>
+</div>
+<div id="simulate-with-simeps" class="section level2">
+<h2><span class="header-section-number">2.2</span> Simulate with <code>simeps</code></h2>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">system.time</span>({
+  out &lt;-<span class="st"> </span>mod <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">ev</span>(<span class="dt">amt=</span><span class="dv">100</span>) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">mrgsim</span>(<span class="dt">end=</span><span class="dv">48</span>, <span class="dt">param=</span><span class="kw">list</span>(<span class="dt">FLAG=</span><span class="dv">1</span>))
+  sum &lt;-<span class="st"> </span><span class="kw">summary</span>(out)
+})</code></pre></div>
+<pre><code>.    user  system elapsed 
+.   0.007   0.000   0.006</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">print</span>(sum)</code></pre></div>
+<pre><code>.        ID         time            CENT              CP         
+.  Min.   :1   Min.   : 0.00   Min.   :  0.00   Min.   : 0.2863  
+.  1st Qu.:1   1st Qu.:11.25   1st Qu.: 15.93   1st Qu.: 3.3335  
+.  Median :1   Median :23.50   Median : 29.38   Median : 5.8468  
+.  Mean   :1   Mean   :23.52   Mean   : 37.47   Mean   : 6.0834  
+.  3rd Qu.:1   3rd Qu.:35.75   3rd Qu.: 54.21   3rd Qu.: 8.0909  
+.  Max.   :1   Max.   :48.00   Max.   :100.00   Max.   :15.7045</code></pre>
+<p>Better … all concentrations are positive.</p>
+</div>
 </div>
 
 

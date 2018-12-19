@@ -14,6 +14,10 @@ navbar:
       menu:
       - text: "Model with no compartments"
         href: "dollar_pred.html"
+    - text: "Keep Going"
+      menu:
+      - text: "Resimulate ETA and EPS"
+        href: "simeta.html"
   right:
     - text: "mrgsolve.github.io"
       href: https://mrgsolve.github.io
