@@ -1,5 +1,6 @@
 name: "mrgsolve-vignettes"
 output_dir: ../docs
+exclude: [mrgsolve_builds]
 navbar:
   title: "<div class = mrgg>mrgsolve::vignettes</div>"
   left:
@@ -9,6 +10,10 @@ navbar:
         href: "01-get-started.html"
       - text: "Event Objects"
         href: "events.html"
+    - text: "Model Specification"
+      menu:
+      - text: "Model with no compartments"
+        href: "dollar_pred.html"
   right:
     - text: "mrgsolve.github.io"
       href: https://mrgsolve.github.io

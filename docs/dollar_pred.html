@@ -11,7 +11,7 @@
 
 
 
-<title>Quick Start</title>
+<title>Models without compartments ($PRED)</title>
 
 <script src="site_libs/jquery-1.11.3/jquery.min.js"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -469,84 +469,128 @@ div.tocify {
 
 
 
-<h1 class="title toc-ignore">Quick Start</h1>
+<h1 class="title toc-ignore">Models without compartments ($PRED)</h1>
 
 </div>
 
 
-<p>This vignette shows the user how to do their first simulation with mrgsolve.</p>
-<div id="load-a-model" class="section level1">
-<h1><span class="header-section-number">1</span> Load a model</h1>
-<p>After loading the package</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(mrgsolve)</code></pre></div>
-<p>we’ll use the <code>mread()</code> function to read, parse, compile and load a model out of the internal model libary. Try calling the modlib function (<code>modlib()</code>) and see that the path to the installed package is returned, pointing to a directory of pre-coded models. These models are good to try when learning mrgsolve.</p>
-<p>For this first example, we’re using a one compartment model (called <code>pk1</code> in the model library)</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">mod &lt;-<span class="st"> </span><span class="kw">mread_cache</span>(<span class="st">&quot;pk1&quot;</span>, <span class="kw">modlib</span>())</code></pre></div>
-<p>Once we create the model object (<code>mod</code>) we can extract certain information about the model. For example, get an overview</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">mod</code></pre></div>
-<pre><code>. 
-. 
-. -------- mrgsolve model object (unix) --------
-.   Project: /Users/kyleb/Rli...gsolve/models
-.   source:        pk1.cpp
-.   shared object: pk1-so-162b114c2567d 
-. 
-.   Time:          start: 0 end: 24 delta: 1
-.   &gt;              add: &lt;none&gt;
-.   &gt;              tscale: 1
-. 
-.   Compartments:  EV CENT [2]
-.   Parameters:    CL V KA [3]
-.   Omega:         0x0 
-.   Sigma:         0x0 
-. 
-.   Solver:        atol: 1e-08 rtol: 1e-08
-.   &gt;              maxsteps: 5000 hmin: 0 hmax: 0</code></pre>
-<p>Or look at model parameters and their values</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">param</span>(mod)</code></pre></div>
-<pre><code>. 
-.  Model parameters (N=3):
-.  name value . name value
-.  CL   1     | V    20   
-.  KA   1     | .    .</code></pre>
-<p>We’ll see in the section below how to run a simulation from this model. But first, let’s create a dosing intervention to use with this model.</p>
+<p>This vignette introduces a new formal code block for writing models where there are no compartments. The block is named after the analgous NONMEM block called <code>$PRED</code>. This functionality has always been possible with mrgsolve, but only now is there a code block dedicated to these models. Also, a relaxed set of data set constraints have been put in place when these types of models are invoked.</p>
+<div id="status" class="section level1">
+<h1><span class="header-section-number">1</span> Status</h1>
+<p>The functionality in this vignette can only be access from the GitHub version. We will update this vignette once these features are rolled into a release on CRAN.</p>
 </div>
-<div id="create-an-intervention" class="section level1">
-<h1><span class="header-section-number">2</span> Create an intervention</h1>
-<p>The simplest way to create an intervention is to use an event object. This is just a simple expression of one or more model interventions (most frequently doses)</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">evnt &lt;-<span class="st"> </span><span class="kw">ev</span>(<span class="dt">amt =</span> <span class="dv">100</span>, <span class="dt">ii =</span> <span class="dv">24</span>, <span class="dt">addl =</span> <span class="dv">9</span>)</code></pre></div>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">evnt</code></pre></div>
-<pre><code>. Events:
-.   time cmt amt evid ii addl
-. 1    0   1 100    1 24    9</code></pre>
-<p>We’ll see in other vignettes how to create more-complicated events as well as how to create larger data sets with many individuals in them.</p>
-<p>For now, the event object is just an intervention that we can combine with a model.</p>
+<div id="example-model" class="section level1">
+<h1><span class="header-section-number">2</span> Example model</h1>
+<p>As a most-basic model, we look at the <code>pred1</code> model in <code>modlib()</code></p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(mrgsolve)
+mod &lt;-<span class="st"> </span><span class="kw">mread</span>(<span class="st">&quot;pred1&quot;</span>, <span class="kw">modlib</span>())</code></pre></div>
+<p>The model code is</p>
+<div class="sourceCode"><pre class="sourceCode c"><code class="sourceCode c">$PROB
+An example model expressed in closed form
+$PARAM B = -<span class="dv">1</span>, beta0 = <span class="dv">100</span>, beta1 = <span class="fl">0.1</span>
+$OMEGA <span class="dv">2</span> <span class="fl">0.3</span>
+$PRED
+<span class="dt">double</span> beta0i = beta0 + ETA(<span class="dv">1</span>);
+<span class="dt">double</span> beta1i = beta1*exp(ETA(<span class="dv">2</span>));
+capture Y = beta0i + beta1i*B;</code></pre></div>
+<p>This is a random-intercept, random slope linear model. Like other models in mrgsolve, you can write parameters (<code>$PARAM</code>), and random effects (<code>$OMEGA</code>). But the model is actually written in <code>$PRED</code>.</p>
+<p>When mrgsolve finds <code>$PRED</code>, it will generate an error if it also finds <code>$MAIN</code>, <code>$TABLE</code>, or <code>$ODE</code>. However, the code that gets entered into <code>$PRED</code> would function exactly as if you put it in <code>$TABLE</code>.</p>
+<p>In the example model, the response is a function of the parameter <code>B</code>, so we’ll generate an input data set with some values of <code>B</code></p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(dplyr)
+data &lt;-<span class="st"> </span><span class="kw">data_frame</span>(<span class="dt">ID =</span> <span class="dv">1</span>, <span class="dt">B =</span> <span class="kw">exp</span>(<span class="kw">rnorm</span>(<span class="dv">100</span>, <span class="dv">0</span>,<span class="dv">2</span>)))
+
+<span class="kw">head</span>(data)</code></pre></div>
+<pre><code>. # A tibble: 6 x 2
+.      ID      B
+.   &lt;dbl&gt;  &lt;dbl&gt;
+. 1     1  0.469
+. 2     1  0.649
+. 3     1 10.6  
+. 4     1  0.515
+. 5     1 19.5  
+. 6     1  0.192</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">out &lt;-<span class="st"> </span><span class="kw">mrgsim_d</span>(mod,data,<span class="dt">carry.out=</span><span class="st">&quot;B&quot;</span>)
+
+<span class="kw">plot</span>(out, Y<span class="op">~</span>B)</code></pre></div>
+<p><img src="dollar_pred_files/figure-html/unnamed-chunk-4-1.png" width="672" /></p>
+<p>Like other models, we can simulate from a population</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(purrr)
+<span class="kw">set.seed</span>(<span class="dv">223</span>)
+df &lt;-<span class="st"> </span><span class="kw">map_df</span>(<span class="dv">1</span><span class="op">:</span><span class="dv">30</span>, <span class="cf">function</span>(i) <span class="kw">data_frame</span>(<span class="dt">ID =</span> i, <span class="dt">B =</span> <span class="kw">seq</span>(<span class="dv">0</span>,<span class="dv">30</span>,<span class="dv">1</span>)))
+
+<span class="kw">head</span>(df)</code></pre></div>
+<pre><code>. # A tibble: 6 x 2
+.      ID     B
+.   &lt;int&gt; &lt;dbl&gt;
+. 1     1     0
+. 2     1     1
+. 3     1     2
+. 4     1     3
+. 5     1     4
+. 6     1     5</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">mod <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">data_set</span>(df) <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">mrgsim</span>(<span class="dt">carry.out=</span><span class="st">&quot;B&quot;</span>) <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">plot</span>(Y <span class="op">~</span><span class="st"> </span>B)</code></pre></div>
+<p><img src="dollar_pred_files/figure-html/unnamed-chunk-5-1.png" width="672" /></p>
 </div>
-<div id="simulate" class="section level1">
-<h1><span class="header-section-number">3</span> Simulate</h1>
-<p>To simulate, use the <code>mrgsim()</code> function.</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">out &lt;-<span class="st"> </span>mod <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">ev</span>(evnt) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">mrgsim</span>(<span class="dt">end =</span> <span class="dv">480</span>, <span class="dt">delta =</span> <span class="fl">0.1</span>)</code></pre></div>
-<p>We use a pipe sequence here (<code>%&gt;%</code>) to pass the model object (<code>mod)</code> into the event function (<code>ev()</code>) where we attach the dosing intervention, and that result gets passed into the simulation function. The result of the simulation function is essentially a data frame of simulated values</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">out</code></pre></div>
-<pre><code>. Model:  pk1 
-. Dim:    4802 x 5 
-. Time:   0 to 480 
-. ID:     1 
-.      ID time     EV   CENT     CP
-. [1,]  1  0.0   0.00  0.000 0.0000
-. [2,]  1  0.0 100.00  0.000 0.0000
-. [3,]  1  0.1  90.48  9.492 0.4746
-. [4,]  1  0.2  81.87 18.034 0.9017
-. [5,]  1  0.3  74.08 25.715 1.2858
-. [6,]  1  0.4  67.03 32.619 1.6309
-. [7,]  1  0.5  60.65 38.819 1.9409
-. [8,]  1  0.6  54.88 44.383 2.2191</code></pre>
-</div>
-<div id="plot" class="section level1">
-<h1><span class="header-section-number">4</span> Plot</h1>
-<p>mrgsolve comes with several different functions for processing output. One simple function is a plot method that will generate a plot of what was just simulated</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">plot</span>(out)</code></pre></div>
-<p><img src="01-get-started_files/figure-html/unnamed-chunk-9-1.png" width="672" /></p>
+<div id="pkpd-model" class="section level1">
+<h1><span class="header-section-number">3</span> PK/PD Model</h1>
+<p>Here is an implementation of a PK/PD model using <code>$PRED</code></p>
+<p>In this modeL</p>
+<ul>
+<li>Calculate <code>CL</code> as a function of <code>WT</code> and a random effect</li>
+<li>Derive <code>AUC</code> from <code>CL</code> and <code>DOSE</code></li>
+<li>The response (<code>Y</code>) is a calculated from <code>AUC</code> and the Emax model parameters</li>
+</ul>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">code &lt;-<span class="st"> &#39;</span>
+<span class="st">$PARAM TVCL = 1, WT = 70, AUC50 = 20, DOSE = 100, E0 = 35, EMAX = 2.4</span>
+
+<span class="st">$OMEGA 1</span>
+
+<span class="st">$SIGMA 100</span>
+
+<span class="st">$PRED</span>
+<span class="st">double CL = TVCL*pow(WT/70,0.75)*exp(ETA(1));</span>
+<span class="st">capture AUC = DOSE/CL;</span>
+<span class="st">capture Y = E0*(1+EMAX*AUC/(AUC50+AUC))+EPS(1);</span>
+<span class="st">&#39;</span></code></pre></div>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">mod &lt;-<span class="st"> </span><span class="kw">mcode</span>(<span class="st">&quot;pkpd&quot;</span>, code)</code></pre></div>
+<p>To simulate, look at 50 subjects at each of 5 doses</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">data &lt;-<span class="st"> </span>
+<span class="st">  </span><span class="kw">expand.idata</span>(<span class="dt">DOSE =</span> <span class="kw">c</span>(<span class="dv">30</span>,<span class="dv">50</span>,<span class="dv">80</span>,<span class="dv">110</span>,<span class="dv">200</span>),<span class="dt">ID =</span> <span class="dv">1</span><span class="op">:</span><span class="dv">50</span>) <span class="op">%&gt;%</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">mutate</span>(<span class="dt">WT =</span> <span class="kw">exp</span>(<span class="kw">rnorm</span>(<span class="kw">n</span>(),<span class="kw">log</span>(<span class="dv">80</span>),<span class="dv">1</span>)))
+
+<span class="kw">head</span>(data)</code></pre></div>
+<pre><code>.   ID DOSE        WT
+. 1  1   30  59.13254
+. 2  2   50 317.32739
+. 3  3   80 242.15746
+. 4  4  110 170.78136
+. 5  5  200 248.18054
+. 6  6   30  51.22012</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">out &lt;-<span class="st"> </span><span class="kw">mrgsim_d</span>(mod,data,<span class="dt">carry.out=</span><span class="st">&quot;WT,DOSE&quot;</span>) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">as_data_frame</span>()
+
+<span class="kw">head</span>(out)</code></pre></div>
+<pre><code>. # A tibble: 6 x 6
+.      ID  time    WT  DOSE   AUC     Y
+.   &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
+. 1     1     0  59.1    30 232.  111. 
+. 2     2     0 317.     50  36.8  85.3
+. 3     3     0 242.     80  36.5  98.9
+. 4     4     0 171.    110  23.7  80.3
+. 5     5     0 248.    200 331.  109. 
+. 6     6     0  51.2    30 252.  116.</code></pre>
+<p>Plot the response (<code>Y</code>) versus <code>AUC</code>, colored by dose</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(ggplot2)
+
+<span class="kw">ggplot</span>(out, <span class="kw">aes</span>(AUC,Y,<span class="dt">col =</span><span class="kw">factor</span>(DOSE))) <span class="op">+</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">geom_point</span>() <span class="op">+</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">scale_x_continuous</span>(<span class="dt">trans =</span> <span class="st">&quot;log&quot;</span>, <span class="dt">breaks =</span> <span class="dv">10</span><span class="op">^</span><span class="kw">seq</span>(<span class="op">-</span><span class="dv">4</span>,<span class="dv">4</span>)) <span class="op">+</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">geom_smooth</span>(<span class="kw">aes</span>(AUC,Y),<span class="dt">se =</span> <span class="ot">FALSE</span>,<span class="dt">col=</span><span class="st">&quot;darkgrey&quot;</span>) <span class="op">+</span><span class="st"> </span><span class="kw">theme_bw</span>() <span class="op">+</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">scale_color_brewer</span>(<span class="dt">palette =</span> <span class="st">&quot;Set2&quot;</span>, <span class="dt">name =</span> <span class="st">&quot;&quot;</span>) <span class="op">+</span><span class="st"> </span>
+<span class="st">  </span><span class="kw">theme</span>(<span class="dt">legend.position =</span> <span class="st">&quot;top&quot;</span>)</code></pre></div>
+<p><img src="dollar_pred_files/figure-html/unnamed-chunk-10-1.png" width="672" /></p>
 </div>
 
 
