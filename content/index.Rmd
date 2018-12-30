@@ -1,5 +1,5 @@
 ---
-title: "About R Markdown"
+title: "mrgsolve vignettes"
 output: 
   html_document: 
     toc: false
