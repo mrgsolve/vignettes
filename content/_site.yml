@@ -16,7 +16,7 @@ navbar:
         href: "dollar_pred.html"
     - text: "Keep Going"
       menu:
-      - test: "Set initial conditions"
+      - text: "Set initial conditions"
         href: "init.html"
       - text: "Resimulate ETA and EPS"
         href: "simeta.html"
