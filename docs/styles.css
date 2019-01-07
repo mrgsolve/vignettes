@@ -2,6 +2,7 @@
     background-color: darkgreen;
 }
 
+
 .mrgg {
   color: darkgreen;
 }
@@ -20,10 +21,13 @@ h1 {
   color: black;
 }
 
+.row {
+  font-size: 14pt;
+}
 body{ /* Normal  */
     font-family: Helvetica, arial, sans-serif;
     line-height: 1.45;
-    font-size: 14pt;
+    font-size: 12pt;
 }
 
 pre {

@@ -4,22 +4,18 @@ exclude: [mrgsolve_builds]
 navbar:
   title: "<div class = mrgg>mrgsolve::vignettes</div>"
   left:
-    - text: "Get Started"
-      menu: 
-      - text: "Quick Start"
-        href: "01-get-started.html"
-      - text: "Event Objects"
-        href: "events.html"
-    - text: "Model Specification"
+    - text: "Content"
       menu:
-      - text: "Model with no compartments"
-        href: "dollar_pred.html"
-    - text: "Keep Going"
-      menu:
-      - text: "Set initial conditions"
-        href: "init.html"
-      - text: "Resimulate ETA and EPS"
-        href: "simeta.html"
+       - text: "Quick Start"
+         href: "01-get-started.html"
+       - text: "Event Objects"
+         href: "events.html"
+       - text: "Model with no compartments"
+         href: "dollar_pred.html"
+       - text: "Set initial conditions"
+         href: "init.html"
+       - text: "Resimulate ETA and EPS"
+         href: "simeta.html"
   right:
     - text: "mrgsolve.github.io"
       href: https://mrgsolve.github.io
