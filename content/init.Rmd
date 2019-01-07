@@ -197,7 +197,7 @@ mod %>% param(KIN=100) %>% init
 ```
 
 
-# Extra bonus: set initial conditions via `idata`
+# Set initial conditions via `idata`
 
 Go back to house model
 
@@ -231,13 +231,6 @@ out <-
 plot(out, CENT~.)
 
 ```
-
-# Session Info
-```{r,echo=FALSE}
-sessionInfo()
-```
-
-
 
 
 

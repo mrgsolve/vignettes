@@ -667,8 +667,8 @@ div.tocify {
 .  RESP (1)   20    | . ...   .</code></pre>
 </div>
 </div>
-<div id="extra-bonus-set-initial-conditions-via-idata" class="section level1">
-<h1><span class="header-section-number">3</span> Extra bonus: set initial conditions via <code>idata</code></h1>
+<div id="set-initial-conditions-via-idata" class="section level1">
+<h1><span class="header-section-number">3</span> Set initial conditions via <code>idata</code></h1>
 <p>Go back to house model</p>
 <div class="sourceCode" id="cb24"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb24-1" title="1">mod &lt;-<span class="st"> </span>mrgsolve<span class="op">:::</span><span class="kw">house</span>()</a>
 <a class="sourceLine" id="cb24-2" title="2"><span class="kw">init</span>(mod)</a></code></pre></div>
@@ -700,49 +700,6 @@ div.tocify {
 <a class="sourceLine" id="cb28-4" title="4"><span class="st">  </span><span class="kw">mrgsim</span>(<span class="dt">end=</span><span class="dv">40</span>)</a></code></pre></div>
 <div class="sourceCode" id="cb29"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb29-1" title="1"><span class="kw">plot</span>(out, CENT<span class="op">~</span>.)</a></code></pre></div>
 <p><img src="init_files/figure-html/unnamed-chunk-17-1.png" width="672" /></p>
-</div>
-<div id="session-info" class="section level1">
-<h1><span class="header-section-number">4</span> Session Info</h1>
-<pre><code>. R version 3.5.2 (2018-12-20)
-. Platform: x86_64-apple-darwin15.6.0 (64-bit)
-. Running under: macOS Sierra 10.12.6
-. 
-. Matrix products: default
-. BLAS: /System/Library/Frameworks/Accelerate.framework/Versions/A/Frameworks/vecLib.framework/Versions/A/libBLAS.dylib
-. LAPACK: /Library/Frameworks/R.framework/Versions/3.5/Resources/lib/libRlapack.dylib
-. 
-. locale:
-. [1] en_US.UTF-8/en_US.UTF-8/en_US.UTF-8/C/en_US.UTF-8/en_US.UTF-8
-. 
-. attached base packages:
-. [1] stats     graphics  grDevices utils     datasets  methods   base     
-. 
-. other attached packages:
-. [1] ggplot2_3.1.0        bindrcpp_0.2.2       purrr_0.2.5         
-. [4] dplyr_0.7.8          mrgsolve_0.8.12.9000
-. 
-. loaded via a namespace (and not attached):
-.  [1] Rcpp_1.0.0                RColorBrewer_1.1-2       
-.  [3] pillar_1.3.1              compiler_3.5.2           
-.  [5] plyr_1.8.4                bindr_0.1.1              
-.  [7] sys_2.1                   tools_3.5.2              
-.  [9] digest_0.6.18             evaluate_0.12            
-. [11] tibble_1.4.2              gtable_0.2.0             
-. [13] lattice_0.20-38           pkgconfig_2.0.2          
-. [15] rlang_0.3.0.1             cli_1.0.1                
-. [17] yaml_2.2.0                xfun_0.4                 
-. [19] RcppArmadillo_0.9.200.5.0 withr_2.1.2              
-. [21] stringr_1.3.1             knitr_1.21               
-. [23] grid_3.5.2                tidyselect_0.2.5         
-. [25] glue_1.3.0                R6_2.3.0                 
-. [27] fansi_0.4.0               rmarkdown_1.11           
-. [29] bookdown_0.9              magrittr_1.5             
-. [31] codetools_0.2-15          scales_1.0.0             
-. [33] htmltools_0.3.6           rsconnect_0.8.12         
-. [35] assertthat_0.2.0          colorspace_1.3-2         
-. [37] labeling_0.3              utf8_1.1.4               
-. [39] stringi_1.2.4             lazyeval_0.2.1           
-. [41] munsell_0.5.0             crayon_1.3.4</code></pre>
 </div>
 
 
