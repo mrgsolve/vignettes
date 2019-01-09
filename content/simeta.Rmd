@@ -1,18 +1,16 @@
 ---
 title: "Resimulate random effect variates on demand"
-output: html_document
 ---
- 
- 
- 
-```{r setup, echo = FALSE, message = FALSE, warning = FALSE,code = readLines("global.R")}
-knitr::opts_chunk$set(cache = TRUE, autodep = TRUE)
-```
 
+```{r simeta_setup,echo=FALSE,message=FALSE}
+knitr::opts_chunk$set(comment='.',cache=TRUE, autodep=TRUE,fig.align=TRUE)
+```
 ```{r,message=FALSE}
 library(mrgsolve)
 library(dplyr)
+options(mrgsolve.soloc="build")
 ```
+
 
 
 # `simeta` example
@@ -51,13 +49,13 @@ if(NEWIND <=1) {
   if(FLAG > 0) {
     while((BASE < 80) || (BASE > 120)) {
       if(++i > 100) {
-        report("There was a problem simulating BASE");
+        mrg::report("There was a problem simulating BASE.");
+        break;
       }
       simeta();
       BASE = TVBASE*exp(EBASE);
     }
   }
-  
   RESPONSE_0 = BASE;
 }
 
@@ -71,11 +69,11 @@ $CAPTURE EBASE
 
 
 ```{r,message=FALSE}
-mod <- mcode_cache("simeta", code)
+mod <- mcode_cache("simeta",  code)
 ```
 
 
-## Simulate without `simeta`
+### Simulate without `simeta`
 ```{r,comment='.'}
 system.time({
   out <- mod %>% mrgsim(nid=100, end=-1)
@@ -93,7 +91,7 @@ When we simulate with `FLAG=0`, the `simeta` code __isn't__ called and we
 `BASE` values all over the place.
  
 
-## Simulate with `simeta`
+### Simulate with `simeta`
 ```{r,comment='.'}
 system.time({
   out <- mod %>% mrgsim(nid=100, end=-1, param=list(FLAG=1))
@@ -107,7 +105,7 @@ When we simulate with `FLAG=1`, the `simeta` code __is__ called and we
 `BASE` values within the specified bounds.
  
 
-# `simeps` example
+## `simeps` example
  
 - In this example, we want to re-simulate the residual error variate to 
 make sure we have a concentration that is positive.
@@ -129,7 +127,8 @@ capture CP = CENT/V + EPS(1);
 int i = 0;
 while(CP < 0 && FLAG > 0) {
   if(++i > 100) {
-    report("Problem simulating positive CP");
+    mrg::report("Problem simulating positive CP");
+    break;
   }
   simeps();
   CP = CENT/V + EPS(1);
@@ -144,7 +143,7 @@ mod <- mcode_cache("simeps", code)
 ```
 
 
-## Simulate without `simeps`
+### Simulate without `simeps`
 
 ```{r,comment='.'}
 system.time({
@@ -161,7 +160,7 @@ __Negative__ concentrations are simulated when we __don't__ call the
 `simeps` loop.
  
 
-## Simulate with `simeps`
+### Simulate with `simeps`
 
 ```{r}
 system.time({

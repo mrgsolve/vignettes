@@ -489,7 +489,8 @@ div.tocify {
 
 
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(mrgsolve)
-<span class="kw">library</span>(dplyr)</code></pre></div>
+<span class="kw">library</span>(dplyr)
+<span class="kw">options</span>(<span class="dt">mrgsolve.soloc=</span><span class="st">&quot;build&quot;</span>)</code></pre></div>
 <div id="simeta-example" class="section level1">
 <h1><span class="header-section-number">1</span> <code>simeta</code> example</h1>
 <ul>
@@ -516,13 +517,13 @@ div.tocify {
 <span class="st">  if(FLAG &gt; 0) {</span>
 <span class="st">    while((BASE &lt; 80) || (BASE &gt; 120)) {</span>
 <span class="st">      if(++i &gt; 100) {</span>
-<span class="st">        report(&quot;There was a problem simulating BASE&quot;);</span>
+<span class="st">        mrg::report(&quot;There was a problem simulating BASE.&quot;);</span>
+<span class="st">        break;</span>
 <span class="st">      }</span>
 <span class="st">      simeta();</span>
 <span class="st">      BASE = TVBASE*exp(EBASE);</span>
 <span class="st">    }</span>
 <span class="st">  }</span>
-<span class="st">  </span>
 <span class="st">  RESPONSE_0 = BASE;</span>
 <span class="st">}</span>
 
@@ -532,15 +533,15 @@ div.tocify {
 
 <span class="st">$CAPTURE EBASE</span>
 <span class="st">&#39;</span></code></pre></div>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">mod &lt;-<span class="st"> </span><span class="kw">mcode_cache</span>(<span class="st">&quot;simeta&quot;</span>, code)</code></pre></div>
-<div id="simulate-without-simeta" class="section level2">
-<h2><span class="header-section-number">1.1</span> Simulate without <code>simeta</code></h2>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">mod &lt;-<span class="st"> </span><span class="kw">mcode_cache</span>(<span class="st">&quot;simeta&quot;</span>,  code)</code></pre></div>
+<div id="simulate-without-simeta" class="section level3">
+<h3><span class="header-section-number">1.0.1</span> Simulate without <code>simeta</code></h3>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">system.time</span>({
   out &lt;-<span class="st"> </span>mod <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">mrgsim</span>(<span class="dt">nid=</span><span class="dv">100</span>, <span class="dt">end=</span><span class="op">-</span><span class="dv">1</span>)
   sum &lt;-<span class="st"> </span><span class="kw">summary</span>(out)
 })</code></pre></div>
 <pre><code>.    user  system elapsed 
-.   0.006   0.000   0.012</code></pre>
+.   0.019   0.001   0.020</code></pre>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">print</span>(sum)</code></pre></div>
 <pre><code>.        ID              time      RESPONSE           EBASE         
 .  Min.   :  1.00   Min.   :0   Min.   :  13.43   Min.   :-2.00763  
@@ -558,14 +559,14 @@ div.tocify {
 .  Max.   :1373.64</code></pre>
 <p>When we simulate with <code>FLAG=0</code>, the <code>simeta</code> code <strong>isn’t</strong> called and we <code>BASE</code> values all over the place.</p>
 </div>
-<div id="simulate-with-simeta" class="section level2">
-<h2><span class="header-section-number">1.2</span> Simulate with <code>simeta</code></h2>
+<div id="simulate-with-simeta" class="section level3">
+<h3><span class="header-section-number">1.0.2</span> Simulate with <code>simeta</code></h3>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">system.time</span>({
   out &lt;-<span class="st"> </span>mod <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">mrgsim</span>(<span class="dt">nid=</span><span class="dv">100</span>, <span class="dt">end=</span><span class="op">-</span><span class="dv">1</span>, <span class="dt">param=</span><span class="kw">list</span>(<span class="dt">FLAG=</span><span class="dv">1</span>))
   sum &lt;-<span class="st"> </span><span class="kw">summary</span>(out)
 })</code></pre></div>
 <pre><code>.    user  system elapsed 
-.   0.005   0.000   0.005</code></pre>
+.   0.006   0.000   0.005</code></pre>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">print</span>(sum)</code></pre></div>
 <pre><code>.        ID              time      RESPONSE          EBASE          
 .  Min.   :  1.00   Min.   :0   Min.   : 80.13   Min.   :-0.221557  
@@ -583,9 +584,8 @@ div.tocify {
 .  Max.   :118.93</code></pre>
 <p>When we simulate with <code>FLAG=1</code>, the <code>simeta</code> code <strong>is</strong> called and we <code>BASE</code> values within the specified bounds.</p>
 </div>
-</div>
-<div id="simeps-example" class="section level1">
-<h1><span class="header-section-number">2</span> <code>simeps</code> example</h1>
+<div id="simeps-example" class="section level2">
+<h2><span class="header-section-number">1.1</span> <code>simeps</code> example</h2>
 <ul>
 <li>In this example, we want to re-simulate the residual error variate to make sure we have a concentration that is positive.</li>
 <li>We set up a loop that looks like the <code>simeta</code> example, but we work in <code>$TABLE</code> this time because we are calculating <code>CP</code>.</li>
@@ -603,7 +603,8 @@ div.tocify {
 <span class="st">int i = 0;</span>
 <span class="st">while(CP &lt; 0 &amp;&amp; FLAG &gt; 0) {</span>
 <span class="st">  if(++i &gt; 100) {</span>
-<span class="st">    report(&quot;Problem simulating positive CP&quot;);</span>
+<span class="st">    mrg::report(&quot;Problem simulating positive CP&quot;);</span>
+<span class="st">    break;</span>
 <span class="st">  }</span>
 <span class="st">  simeps();</span>
 <span class="st">  CP = CENT/V + EPS(1);</span>
@@ -611,14 +612,15 @@ div.tocify {
 
 <span class="st">&#39;</span></code></pre></div>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">mod &lt;-<span class="st"> </span><span class="kw">mcode_cache</span>(<span class="st">&quot;simeps&quot;</span>, code)</code></pre></div>
-<div id="simulate-without-simeps" class="section level2">
-<h2><span class="header-section-number">2.1</span> Simulate without <code>simeps</code></h2>
+<pre><code>. Loading model from cache.</code></pre>
+<div id="simulate-without-simeps" class="section level3">
+<h3><span class="header-section-number">1.1.1</span> Simulate without <code>simeps</code></h3>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">system.time</span>({
   out &lt;-<span class="st"> </span>mod <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">ev</span>(<span class="dt">amt=</span><span class="dv">100</span>) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">mrgsim</span>(<span class="dt">end=</span><span class="dv">48</span>)
   sum &lt;-<span class="st"> </span><span class="kw">summary</span>(out)
 })</code></pre></div>
 <pre><code>.    user  system elapsed 
-.   0.005   0.000   0.006</code></pre>
+.   0.006   0.000   0.007</code></pre>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">print</span>(sum)</code></pre></div>
 <pre><code>.        ID         time            CENT              CP         
 .  Min.   :1   Min.   : 0.00   Min.   :  0.00   Min.   :-11.649  
@@ -629,14 +631,14 @@ div.tocify {
 .  Max.   :1   Max.   :48.00   Max.   :100.00   Max.   : 16.954</code></pre>
 <p><strong>Negative</strong> concentrations are simulated when we <strong>don’t</strong> call the <code>simeps</code> loop.</p>
 </div>
-<div id="simulate-with-simeps" class="section level2">
-<h2><span class="header-section-number">2.2</span> Simulate with <code>simeps</code></h2>
+<div id="simulate-with-simeps" class="section level3">
+<h3><span class="header-section-number">1.1.2</span> Simulate with <code>simeps</code></h3>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">system.time</span>({
   out &lt;-<span class="st"> </span>mod <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">ev</span>(<span class="dt">amt=</span><span class="dv">100</span>) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">mrgsim</span>(<span class="dt">end=</span><span class="dv">48</span>, <span class="dt">param=</span><span class="kw">list</span>(<span class="dt">FLAG=</span><span class="dv">1</span>))
   sum &lt;-<span class="st"> </span><span class="kw">summary</span>(out)
 })</code></pre></div>
 <pre><code>.    user  system elapsed 
-.   0.006   0.000   0.006</code></pre>
+.   0.032   0.001   0.033</code></pre>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">print</span>(sum)</code></pre></div>
 <pre><code>.        ID         time            CENT              CP           
 .  Min.   :1   Min.   : 0.00   Min.   :  0.00   Min.   : 0.006803  
@@ -646,6 +648,7 @@ div.tocify {
 .  3rd Qu.:1   3rd Qu.:35.75   3rd Qu.: 54.21   3rd Qu.: 9.855657  
 .  Max.   :1   Max.   :48.00   Max.   :100.00   Max.   :18.675743</code></pre>
 <p>Better … all concentrations are positive.</p>
+</div>
 </div>
 </div>
 
