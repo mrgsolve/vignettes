@@ -3,8 +3,10 @@ title: Models without compartments ($PRED)
 output: html_document
 ---
 
-```{r setup, echo = FALSE, message = FALSE, warning = FALSE,code = readLines("global.R")}
+```{r pred_setup, echo = FALSE, message = FALSE, warning = FALSE}
+library(mrgsolve)
 knitr::opts_chunk$set(cache = TRUE, autodep = TRUE)
+options(mrgsolve.soloc = "build")
 ```
 
 This vignette introduces a new formal code block for writing models
@@ -118,7 +120,7 @@ head(data)
 ```
 
 ```{r}
-out <- mrgsim_d(mod,data,carry.out="WT,DOSE") %>% as_data_frame()
+out <- mrgsim_d(mod,data,carry.out="WT,DOSE") %>% as.data.frame()
 
 head(out)
 ```

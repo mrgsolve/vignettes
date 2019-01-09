@@ -1,6 +1,6 @@
 base
 mrgsolve
-bindrcpp
 dplyr
 purrr
+bindrcpp
 ggplot2
