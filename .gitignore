@@ -32,6 +32,10 @@ source/*_files/
 source/book/
 source/build/
 source/*.html
+content/*_files
+content/*_cache
+content/build/
+docs/build/
 /cache/
 
 # Temporary files created by R markdown
