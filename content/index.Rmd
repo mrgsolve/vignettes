@@ -30,15 +30,5 @@ This website contains (hopefully) helpful vignettes to help you learn and
 use mrgsolve to get your simulation work done.  
 
 
-# **Other Resources**
-
-See also:
-
-- The main mrgsolve help page: https://mrgsolve.github.io
-- The user guide: https://mrgsolve.github.io/user_guide
-- Issue tracker for asking questions or reporting bugs: 
-  https://github.com/metrumresearchgroup/mrgsolve/issues
-
-
 
 </div>
