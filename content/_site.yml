@@ -24,7 +24,7 @@ output:
     html_document:
       theme: default
       highlight: pygments
-      css: styles.css
+      css: [css/styles.css, css/colors.css]
       toc: true
       toc_float: true
       number_sections: true
