@@ -533,7 +533,7 @@ div.tocify {
 <a class="sourceLine" id="cb3-3" title="3">  mtime = TIME + <span class="fl">1.23</span>;</a>
 <a class="sourceLine" id="cb3-4" title="4">  self.mevent(mtime, <span class="dv">33</span>);</a>
 <a class="sourceLine" id="cb3-5" title="5">}</a></code></pre></div>
-<p>There is a function in the <code>self</code> object called <code>mtime()</code> that takes two arguments: first the <code>TIME</code> of the event and second the <code>EVID</code>. In this example, we create a record with <code>EVID</code> of 33 at 1.23 hours after the dose. We pick <code>EVID</code> 33 as a unique flag for this event. But beyond that, the specific value isn’t important.</p>
+<p>There is a function in the <code>self</code> object called <code>mevent()</code> that takes two arguments: first the <code>TIME</code> of the event and second the <code>EVID</code>. In this example, we create a record with <code>EVID</code> of 33 at 1.23 hours after the dose. We pick <code>EVID</code> 33 as a unique flag for this event. But beyond that, the specific value isn’t important.</p>
 <p>The final piece of this toy model is to check to see if the system has been advanced past <code>mtime</code>.</p>
 <div class="sourceCode" id="cb4"><pre class="sourceCode c"><code class="sourceCode c"><a class="sourceLine" id="cb4-1" title="1"><span class="co">// Part C</span></a>
 <a class="sourceLine" id="cb4-2" title="2">capture past = TIME &gt;= mtime;</a></code></pre></div>

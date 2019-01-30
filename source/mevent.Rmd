@@ -57,7 +57,7 @@ if(EVID==1) {
 }
 ```
 
-There is a function in the `self` object called `mtime()` that takes two 
+There is a function in the `self` object called `mevent()` that takes two 
 arguments: first the `TIME` of the event and second the `EVID`.  In this 
 example, we create a record with `EVID` of 33 at 1.23 hours after the dose. We 
 pick `EVID` 33 as a unique flag for this event. But beyond that, the specific
