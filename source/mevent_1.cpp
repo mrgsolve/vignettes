@@ -7,7 +7,7 @@
 if(NEWIND <=1) double mtime = 1E10;
 
 if(EVID==1) {
-  mtime = TIME + 1.2;
+  mtime = TIME + 1.23;
   self.mevent(mtime, 33);
 }
 
