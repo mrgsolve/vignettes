@@ -11,7 +11,7 @@ options(mrgsolve.soloc = "build")
 
 This vignette introduces a new formal code block for writing models
 where there are no compartments.  The block is named after the 
-analgous NONMEM block called `$PRED`.  This functionality 
+analogous NONMEM block called `$PRED`.  This functionality 
 has always been possible with mrgsolve, but only now is there a 
 code block dedicated to these models. Also, a relaxed set of 
 data set constraints have been put in place when these types of 
@@ -83,7 +83,7 @@ mod %>%
 
 Here is an implementation of a PK/PD model using `$PRED`
 
-In this modeL
+In this model
 
 - Calculate `CL` as a function of `WT` and a random effect
 - Derive `AUC` from `CL` and `DOSE` 

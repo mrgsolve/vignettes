@@ -40,9 +40,10 @@ for use of stable and core features of the package. There may be content overlap
 # Content
 
 - [Get started](01-get-started.html)
-- [Event ibjects](events.html)
+- [Event objects](events.html)
 - [Set initial conditions](init.html)
 - [Model without compartments](dollar_pred.html)
 - [Resimulate random effects](simeta.html)
+- [Modeled events](mevent.html)
 
 </div>
