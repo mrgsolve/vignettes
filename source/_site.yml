@@ -31,4 +31,7 @@ output:
       includes:
         after_body:
           footer.html
+        in_header:
+          in_header.html
+
       
