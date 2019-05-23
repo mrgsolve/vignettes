@@ -2,5 +2,4 @@ base
 mrgsolve
 dplyr
 purrr
-bindrcpp
 ggplot2
