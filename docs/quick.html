@@ -12,7 +12,7 @@
 
 
 
-<title>Modeled events</title>
+<title>Quick hit demos</title>
 
 <script src="site_libs/jquery-1.11.3/jquery.min.js"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -465,111 +465,131 @@ div.tocify {
 
 
 
-<h1 class="title toc-ignore">Modeled events</h1>
+<h1 class="title toc-ignore">Quick hit demos</h1>
 
 </div>
 
 
-<p>A modeled event is a discontinuity introduced into the simulation at a time and with characteristics that are determined within the model itself, rather than the standard setup of specifying these events via the data set.</p>
-<p>In this vignette, we’ll focus on creating a discontinuity in the simulation so that the value of a parameter can change at a specific time that is not necessarily chosen prior to the run time.</p>
-<div id="concept-mevent" class="section level1">
-<h1><span class="header-section-number">1</span> Concept: mevent</h1>
-<p>This toy model shows how you can use <code>mevent()</code> to schedule a discontinuity into the simulation. This model doesn’t do anything, but will help us see what parts are in play.</p>
-<div class="sourceCode" id="cb1"><pre class="sourceCode cpp"><code class="sourceCode cpp"><a class="sourceLine" id="cb1-1" title="1">[ MAIN ]</a>
-<a class="sourceLine" id="cb1-2" title="2"></a>
-<a class="sourceLine" id="cb1-3" title="3"><span class="co">// Part A</span></a>
-<a class="sourceLine" id="cb1-4" title="4"><span class="cf">if</span>(NEWIND &lt;=<span class="dv">1</span>) <span class="dt">double</span> mtime = <span class="fl">1E10</span>;</a>
-<a class="sourceLine" id="cb1-5" title="5"></a>
-<a class="sourceLine" id="cb1-6" title="6"><span class="co">// Part B</span></a>
-<a class="sourceLine" id="cb1-7" title="7"><span class="cf">if</span>(EVID==<span class="dv">1</span>) {</a>
-<a class="sourceLine" id="cb1-8" title="8">  mtime = TIME + <span class="fl">1.23</span>;</a>
-<a class="sourceLine" id="cb1-9" title="9">  self.mevent(mtime, <span class="dv">33</span>);</a>
-<a class="sourceLine" id="cb1-10" title="10">}</a>
-<a class="sourceLine" id="cb1-11" title="11"></a>
-<a class="sourceLine" id="cb1-12" title="12"><span class="co">// Part C</span></a>
-<a class="sourceLine" id="cb1-13" title="13">capture past  = TIME &gt;= mtime;</a></code></pre></div>
-<p>In contrast to the NONMEM <code>MTIME()</code> functionality, we have to do a little more work keeping track of the status of the system. There are multiple ways to organize this. I’m going to show you one way that tries to minimize the amount of this book keeping work.</p>
-<p>In the first part of <code>[ MAIN ]</code>, I will create a variable called <code>mtime</code> and initialize it to some large, arbitrary value. This is the time of the modeled event and we will eventually want to check to see if we are past this time. Initializing to this large .value will ensure we aren’t past <code>mtime</code> when the problem starts. This is Part A.</p>
-<div class="sourceCode" id="cb2"><pre class="sourceCode c"><code class="sourceCode c"><a class="sourceLine" id="cb2-1" title="1"><span class="co">// Part A</span></a>
-<a class="sourceLine" id="cb2-2" title="2"><span class="cf">if</span>(NEWIND &lt;=<span class="dv">1</span> ) capture mtime  = <span class="fl">1E10</span>;</a></code></pre></div>
-<p>Next, we’ll come up with some condition that will trigger the creation of the future discontinuity. In this example, we’ll check to see when a dose was given and schedule the event <code>1.23</code> hours into the future. We keep track of that future time in the <code>mtime</code> variable. That’s Part B.</p>
-<div class="sourceCode" id="cb3"><pre class="sourceCode c"><code class="sourceCode c"><a class="sourceLine" id="cb3-1" title="1"><span class="co">// Part B</span></a>
-<a class="sourceLine" id="cb3-2" title="2"><span class="cf">if</span>(EVID==<span class="dv">1</span>) {</a>
-<a class="sourceLine" id="cb3-3" title="3">  mtime = TIME + <span class="fl">1.23</span>;</a>
-<a class="sourceLine" id="cb3-4" title="4">  self.mevent(mtime, <span class="dv">33</span>);</a>
-<a class="sourceLine" id="cb3-5" title="5">}</a></code></pre></div>
-<p>There is a function in the <code>self</code> object called <code>mevent()</code> that takes two arguments: first the <code>TIME</code> of the event and second the <code>EVID</code>. In this example, we create a record with <code>EVID</code> of 33 at 1.23 hours after the dose. We pick <code>EVID</code> 33 as a unique flag for this event. But beyond that, the specific value isn’t important.</p>
-<p>The final piece of this toy model is to check to see if the system has been advanced past <code>mtime</code>.</p>
-<div class="sourceCode" id="cb4"><pre class="sourceCode c"><code class="sourceCode c"><a class="sourceLine" id="cb4-1" title="1"><span class="co">// Part C</span></a>
-<a class="sourceLine" id="cb4-2" title="2">capture past = TIME &gt;= mtime;</a></code></pre></div>
-<p>To put it all back together</p>
-<div class="sourceCode" id="cb5"><pre class="sourceCode cpp"><code class="sourceCode cpp"><a class="sourceLine" id="cb5-1" title="1">[ MAIN ]</a>
-<a class="sourceLine" id="cb5-2" title="2"></a>
-<a class="sourceLine" id="cb5-3" title="3"><span class="co">// Part A</span></a>
-<a class="sourceLine" id="cb5-4" title="4"><span class="cf">if</span>(NEWIND &lt;=<span class="dv">1</span>) <span class="dt">double</span> mtime = <span class="fl">1E10</span>;</a>
-<a class="sourceLine" id="cb5-5" title="5"></a>
-<a class="sourceLine" id="cb5-6" title="6"><span class="co">// Part B</span></a>
-<a class="sourceLine" id="cb5-7" title="7"><span class="cf">if</span>(EVID==<span class="dv">1</span>) {</a>
-<a class="sourceLine" id="cb5-8" title="8">  mtime = TIME + <span class="fl">1.23</span>;</a>
-<a class="sourceLine" id="cb5-9" title="9">  self.mevent(mtime, <span class="dv">33</span>);</a>
-<a class="sourceLine" id="cb5-10" title="10">}</a>
-<a class="sourceLine" id="cb5-11" title="11"></a>
-<a class="sourceLine" id="cb5-12" title="12"><span class="co">// Part C</span></a>
-<a class="sourceLine" id="cb5-13" title="13">capture past  = TIME &gt;= mtime;</a></code></pre></div>
-<p>Now run this model to check the output. We want to see when the <code>past</code> variable switches to 1.</p>
-<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb6-1" title="1"><span class="kw">library</span>(mrgsolve)</a>
-<a class="sourceLine" id="cb6-2" title="2"></a>
-<a class="sourceLine" id="cb6-3" title="3">mod &lt;-<span class="st"> </span><span class="kw">mread_cache</span>(<span class="st">&quot;mevent_0&quot;</span>)</a></code></pre></div>
-<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb7-1" title="1">mod <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">ev</span>(<span class="dt">amt =</span> <span class="dv">1</span>, <span class="dt">cmt=</span><span class="dv">0</span>) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">mrgsim</span>()</a></code></pre></div>
-<pre><code>## Model:  mevent_0 
-## Dim:    26 x 3 
-## Time:   0 to 24 
-## ID:     1 
-##     ID time past
-## 1:   1    0    0
-## 2:   1    0    0
-## 3:   1    1    0
-## 4:   1    2    1
-## 5:   1    3    1
-## 6:   1    4    1
-## 7:   1    5    1
-## 8:   1    6    1</code></pre>
-<p>The switch happens at time 1.23, between time 1 and time 2. You can use the <code>mrgsolve::report()</code> function to check that the <code>EVID==33</code> event happens at the proper time (not able to display this inside the vignette). This is an optional Part D.</p>
-<div class="sourceCode" id="cb9"><pre class="sourceCode c"><code class="sourceCode c"><a class="sourceLine" id="cb9-1" title="1"><span class="co">// Part D</span></a>
-<a class="sourceLine" id="cb9-2" title="2"><span class="cf">if</span>(EVID==<span class="dv">33</span>) mrgsolve::report(TIME);  </a></code></pre></div>
-<p>So we can check that the model is actually stopping at this point (TIME 1.23). Note that this time is not included in the simulation time grid.</p>
+<p>These are all miscellaneous features that may be difficult to find in other documentation.</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb1-1" title="1"><span class="kw">library</span>(mrgsolve)</a>
+<a class="sourceLine" id="cb1-2" title="2"><span class="kw">library</span>(dplyr)</a></code></pre></div>
+<div id="operator-for-model-object-gets-the-parameter-value" class="section level1">
+<h1><span class="header-section-number">1</span> <code>$</code> operator for model object gets the parameter value</h1>
+<p>If our model parameters are</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb2-1" title="1">mod &lt;-<span class="st"> </span>mrgsolve<span class="op">:::</span><span class="kw">house</span>()</a>
+<a class="sourceLine" id="cb2-2" title="2"></a>
+<a class="sourceLine" id="cb2-3" title="3"><span class="kw">param</span>(mod)</a></code></pre></div>
+<pre><code>. 
+.  Model parameters (N=14):
+.  name value . name  value
+.  CL   1     | SEX   0    
+.  D1   2     | SEXCL 0.7  
+.  F1   1     | SEXVC 0.85 
+.  IC50 10    | VC    20   
+.  KA   1.2   | WT    70   
+.  KIN  100   | WTCL  0.75 
+.  KOUT 2     | WTVC  1</code></pre>
+<p>we can pick a parameter value with</p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb4-1" title="1">mod<span class="op">$</span>CL</a></code></pre></div>
+<pre><code>. [1] 1</code></pre>
+<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb6-1" title="1">mod<span class="op">$</span>WT</a></code></pre></div>
+<pre><code>. [1] 70</code></pre>
+<p>Or slice off multiple parameters</p>
+<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb8-1" title="1">i_want &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="st">&quot;CL&quot;</span>, <span class="st">&quot;WT&quot;</span>)</a>
+<a class="sourceLine" id="cb8-2" title="2">mod[i_want]</a></code></pre></div>
+<pre><code>. $CL
+. [1] 1
+. 
+. $WT
+. [1] 70</code></pre>
 </div>
-<div id="application-time-varying-ka" class="section level1">
-<h1><span class="header-section-number">2</span> Application: time-varying KA</h1>
-<p>We can put this principle into action with a PK model where KA changes (increases) some time after the administration of the dose. Here’s the model</p>
-<div class="sourceCode" id="cb10"><pre class="sourceCode cpp"><code class="sourceCode cpp"><a class="sourceLine" id="cb10-1" title="1">[ PARAM ] CL = <span class="fl">1.5</span>, V = <span class="dv">8</span>, KA1 = <span class="fl">0.2</span>, KA2 = <span class="fl">3.8</span></a>
-<a class="sourceLine" id="cb10-2" title="2"></a>
-<a class="sourceLine" id="cb10-3" title="3">[ PKMODEL ] cmt = <span class="st">&quot;GUT CENT&quot;</span>, depot = TRUE</a>
-<a class="sourceLine" id="cb10-4" title="4"></a>
-<a class="sourceLine" id="cb10-5" title="5">[ MAIN ]</a>
-<a class="sourceLine" id="cb10-6" title="6"></a>
-<a class="sourceLine" id="cb10-7" title="7"><span class="cf">if</span>(NEWIND &lt;=<span class="dv">1</span>) <span class="dt">double</span> mtime = <span class="fl">1E10</span>;</a>
-<a class="sourceLine" id="cb10-8" title="8"></a>
-<a class="sourceLine" id="cb10-9" title="9"><span class="cf">if</span>(EVID==<span class="dv">1</span>) {</a>
-<a class="sourceLine" id="cb10-10" title="10">  mtime = TIME + <span class="fl">1.23</span>;</a>
-<a class="sourceLine" id="cb10-11" title="11">  self.mevent(mtime, <span class="dv">33</span>);</a>
-<a class="sourceLine" id="cb10-12" title="12">}</a>
-<a class="sourceLine" id="cb10-13" title="13"></a>
-<a class="sourceLine" id="cb10-14" title="14">capture KA = TIME &gt;= mtime ? KA2 : KA1;</a></code></pre></div>
-<p>We have pretty much the same setup as the toy example above, but now including a PK model where KA changes from <code>KA1</code> to <code>KA2</code> at <code>mtime</code></p>
-<div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb11-1" title="1">mod &lt;-<span class="st"> </span><span class="kw">mread</span>(<span class="st">&quot;mevent_1&quot;</span>, <span class="dt">req =</span> <span class="st">&quot;CENT&quot;</span>, <span class="dt">end =</span> <span class="dv">12</span>, <span class="dt">delta =</span> <span class="fl">0.1</span>)</a></code></pre></div>
-<p>When we simulate, we see KA increase at the change point as well as the rate of increase in the <code>CENT</code> compartment</p>
-<div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb12-1" title="1">mod <span class="op">%&gt;%</span><span class="st"> </span></a>
-<a class="sourceLine" id="cb12-2" title="2"><span class="st">  </span><span class="kw">ev</span>(<span class="dt">amt =</span> <span class="dv">100</span>) <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb12-3" title="3"><span class="st">  </span><span class="kw">mrgsim</span>() <span class="op">%&gt;%</span><span class="st"> </span></a>
-<a class="sourceLine" id="cb12-4" title="4"><span class="st">  </span><span class="kw">plot</span>()</a></code></pre></div>
-<p><img src="mevent_files/figure-html/unnamed-chunk-11-1.png" width="672" /></p>
-<p>We can also run this model for several doses</p>
-<div class="sourceCode" id="cb13"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb13-1" title="1">mod <span class="op">%&gt;%</span><span class="st"> </span></a>
-<a class="sourceLine" id="cb13-2" title="2"><span class="st">  </span><span class="kw">ev</span>(<span class="dt">amt =</span> <span class="dv">100</span>, <span class="dt">ii =</span> <span class="dv">12</span>, <span class="dt">total =</span> <span class="dv">4</span>) <span class="op">%&gt;%</span></a>
-<a class="sourceLine" id="cb13-3" title="3"><span class="st">  </span><span class="kw">mrgsim</span>(<span class="dt">end =</span> <span class="dv">48</span>) <span class="op">%&gt;%</span><span class="st"> </span></a>
-<a class="sourceLine" id="cb13-4" title="4"><span class="st">  </span><span class="kw">plot</span>()</a></code></pre></div>
-<p><img src="mevent_files/figure-html/unnamed-chunk-12-1.png" width="672" /></p>
+<div id="model-names" class="section level1">
+<h1><span class="header-section-number">2</span> Model names</h1>
+<p>For programming with a model object, we can extract the names</p>
+<div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb10-1" title="1"><span class="kw">names</span>(mod)</a></code></pre></div>
+<pre><code>. $param
+.  [1] &quot;CL&quot;    &quot;VC&quot;    &quot;KA&quot;    &quot;F1&quot;    &quot;D1&quot;    &quot;WT&quot;    &quot;SEX&quot;   &quot;WTCL&quot; 
+.  [9] &quot;WTVC&quot;  &quot;SEXCL&quot; &quot;SEXVC&quot; &quot;KIN&quot;   &quot;KOUT&quot;  &quot;IC50&quot; 
+. 
+. $init
+. [1] &quot;GUT&quot;  &quot;CENT&quot; &quot;RESP&quot;
+. 
+. $capture
+. [1] &quot;DV&quot; &quot;CP&quot;
+. 
+. $omega
+. [1] &quot;...&quot;
+. 
+. $sigma
+. [1] &quot;...&quot;
+. 
+. $omega_labels
+. $omega_labels[[1]]
+. [1] &quot;ECL&quot;   &quot;EVC&quot;   &quot;EKA&quot;   &quot;EKOUT&quot;
+. 
+. 
+. $sigma_labels
+. $sigma_labels[[1]]
+. [1] &quot;EXPO&quot;</code></pre>
+<p>or get all of the model elements in a list (output not shown)</p>
+<div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb12-1" title="1">my_model &lt;-<span class="st"> </span><span class="kw">as.list</span>(mod)</a></code></pre></div>
+</div>
+<div id="zero-all-random-effect-variances-on-the-fly" class="section level1">
+<h1><span class="header-section-number">3</span> Zero all random effect variances on the fly</h1>
+<p>If your model has random effects, you can easily and temporarily zero them out.</p>
+<div class="sourceCode" id="cb13"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb13-1" title="1">mod &lt;-<span class="st"> </span><span class="kw">modlib</span>(<span class="st">&quot;popex&quot;</span>) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">update</span>(<span class="dt">end=</span><span class="dv">96</span>) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">Req</span>(DV,CL,V)</a></code></pre></div>
+<pre><code>. Loading model from cache.</code></pre>
+<div class="sourceCode" id="cb15"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb15-1" title="1"><span class="kw">omat</span>(mod)</a></code></pre></div>
+<pre><code>. $...
+.       [,1] [,2] [,3]
+. ECL:   0.3  0.0  0.0
+. EV:    0.0  0.1  0.0
+. EKA:   0.0  0.0  0.5</code></pre>
+<p>It is easy to simulate either with or without the random effects in the simulation: this change can be made on the fly.</p>
+<p>Use <code>zero_re</code> to make all random effect variances zero</p>
+<div class="sourceCode" id="cb17"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb17-1" title="1">mod <span class="op">%&gt;%</span><span class="st"> </span>zero_re <span class="op">%&gt;%</span><span class="st"> </span>omat</a></code></pre></div>
+<pre><code>. $...
+.       [,1] [,2] [,3]
+. ECL:     0    0    0
+. EV:      0    0    0
+. EKA:     0    0    0</code></pre>
+<p>By default, both <code>OMEGA</code> and <code>SIGMA</code> are zeroed. Check the arguments for <code>zero_re</code> to see how to selectively zero <code>OMEGA</code> or <code>SIGMA</code>.</p>
+<p>Compare the population output</p>
+<div class="sourceCode" id="cb19"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb19-1" title="1">mod <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">ev</span>(<span class="dt">amt=</span><span class="dv">100</span>) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">mrgsim</span>(<span class="dt">nid=</span><span class="dv">20</span>) <span class="op">%&gt;%</span><span class="st"> </span>plot</a></code></pre></div>
+<p><img src="quick_files/figure-html/unnamed-chunk-9-1.png" width="672" /></p>
+<p>with</p>
+<div class="sourceCode" id="cb20"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb20-1" title="1">mod <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">ev</span>(<span class="dt">amt=</span><span class="dv">100</span>) <span class="op">%&gt;%</span><span class="st"> </span>zero_re <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">mrgsim</span>(<span class="dt">nid=</span><span class="dv">20</span>) <span class="op">%&gt;%</span><span class="st"> </span>plot</a></code></pre></div>
+<p><img src="quick_files/figure-html/unnamed-chunk-10-1.png" width="672" /></p>
+</div>
+<div id="plot-formulae" class="section level1">
+<h1><span class="header-section-number">4</span> Plot formulae</h1>
+<p>We commonly plot simulated output with a special plot method. By default, you get all compartments and output variables in the plot.</p>
+<div class="sourceCode" id="cb21"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb21-1" title="1">mod &lt;-<span class="st"> </span>mrgsolve<span class="op">:::</span><span class="kw">house</span>() <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">ev</span>(<span class="dt">amt=</span><span class="dv">100</span>)</a>
+<a class="sourceLine" id="cb21-2" title="2">mod <span class="op">%&gt;%</span><span class="st"> </span>mrgsim <span class="op">%&gt;%</span><span class="st"> </span>plot</a></code></pre></div>
+<p><img src="quick_files/figure-html/unnamed-chunk-11-1.png" width="672" /></p>
+<p>The plot can be customized with a formula selecting variables to plot. Other arguments</p>
+<p>to <code>lattice::xyplot</code> can be passed as well.</p>
+<div class="sourceCode" id="cb22"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb22-1" title="1">mod <span class="op">%&gt;%</span><span class="st"> </span>mrgsim <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">plot</span>(CP<span class="op">+</span>RESP <span class="op">~</span><span class="st"> </span>time, <span class="dt">lty=</span><span class="dv">2</span>, <span class="dt">col=</span><span class="st">&quot;firebrick&quot;</span>)</a></code></pre></div>
+<p><img src="quick_files/figure-html/unnamed-chunk-12-1.png" width="672" /></p>
+</div>
+<div id="get-a-data-frame-of-simulated-data" class="section level1">
+<h1><span class="header-section-number">5</span> Get a data frame of simulated data</h1>
+<p>By default mrgsolve returns an object of simulated data (and other stuff)</p>
+<div class="sourceCode" id="cb23"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb23-1" title="1">out &lt;-<span class="st"> </span><span class="kw">mrgsim</span>(mod)</a>
+<a class="sourceLine" id="cb23-2" title="2"></a>
+<a class="sourceLine" id="cb23-3" title="3"><span class="kw">class</span>(out)</a></code></pre></div>
+<pre><code>. [1] &quot;mrgsims&quot;
+. attr(,&quot;package&quot;)
+. [1] &quot;mrgsolve&quot;</code></pre>
+<p>But you can get a data frame with</p>
+<div class="sourceCode" id="cb25"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb25-1" title="1">out &lt;-<span class="st"> </span><span class="kw">mrgsim_df</span>(mod)</a>
+<a class="sourceLine" id="cb25-2" title="2"></a>
+<a class="sourceLine" id="cb25-3" title="3"><span class="kw">class</span>(out)</a></code></pre></div>
+<pre><code>. [1] &quot;data.frame&quot;</code></pre>
+<p>or</p>
+<div class="sourceCode" id="cb27"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb27-1" title="1">out &lt;-<span class="st"> </span><span class="kw">mrgsim</span>(mod,<span class="dt">output=</span><span class="st">&quot;df&quot;</span>)</a>
+<a class="sourceLine" id="cb27-2" title="2"></a>
+<a class="sourceLine" id="cb27-3" title="3">out &lt;-<span class="st"> </span><span class="kw">mrgsim</span>(mod) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">as_tibble</span>()</a></code></pre></div>
 </div>
 
 <hr>

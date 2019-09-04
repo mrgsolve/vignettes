@@ -45,5 +45,6 @@ for use of stable and core features of the package. There may be content overlap
 - [Model without compartments](dollar_pred.html)
 - [Resimulate random effects](simeta.html)
 - [Modeled events](mevent.html)
+- [Quick hit demos](quick.html)
 
 </div>
