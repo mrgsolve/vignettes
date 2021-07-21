@@ -521,7 +521,7 @@ div.tocify {
 .   time cmt amt evid ii addl
 . 1    0   1 500    1  0    0
 . 2   24   1 250    1 24    4</code></pre>
-<p><code>mrgsolve</code> also defines a <code>%then$</code> operator that lets you execute one event and <code>%then%</code> a second event</p>
+<p><code>mrgsolve</code> also defines a <code>%then%</code> operator that lets you execute one event and <code>%then%</code> a second event</p>
 <div class="sourceCode" id="cb13"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb13-1" title="1">e3 <span class="op">%then%</span><span class="st"> </span>e2</a></code></pre></div>
 <pre><code>. Events:
 .   time cmt amt evid ii addl
@@ -534,7 +534,7 @@ div.tocify {
 <div class="sourceCode" id="cb15"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb15-1" title="1">e1 &lt;-<span class="st"> </span><span class="kw">ev</span>(<span class="dt">amt=</span><span class="dv">100</span>, <span class="dt">ii=</span><span class="dv">24</span>, <span class="dt">addl=</span><span class="dv">6</span>,  <span class="dt">ID=</span><span class="dv">1</span><span class="op">:</span><span class="dv">5</span>)</a>
 <a class="sourceLine" id="cb15-2" title="2">e2 &lt;-<span class="st"> </span><span class="kw">ev</span>(<span class="dt">amt=</span><span class="dv">50</span>,  <span class="dt">ii=</span><span class="dv">12</span>, <span class="dt">addl=</span><span class="dv">13</span>, <span class="dt">ID=</span><span class="dv">1</span><span class="op">:</span><span class="dv">3</span>)</a>
 <a class="sourceLine" id="cb15-3" title="3">e3 &lt;-<span class="st"> </span><span class="kw">ev</span>(<span class="dt">amt=</span><span class="dv">200</span>, <span class="dt">ii=</span><span class="dv">24</span>, <span class="dt">addl=</span><span class="dv">2</span>,  <span class="dt">ID=</span><span class="dv">1</span><span class="op">:</span><span class="dv">2</span>)</a></code></pre></div>
-<p>When combined into a data set, we get * N=5 IDs receiving 100 mg Q24h x7 * N=3 IDs receiving 50 mg Q12h x 14 * N=2 IDs receiving 200 mg Q48h x 3</p>
+<p>When combined into a data set, we get * N=5 IDs receiving 100 mg Q24h x7 * N=3 IDs receiving 50 mg Q12h x 14 * N=2 IDs receiving 200 mg Q24h x 3</p>
 <div class="sourceCode" id="cb16"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb16-1" title="1">data &lt;-<span class="st"> </span><span class="kw">as_data_set</span>(e1,e2,e3)</a>
 <a class="sourceLine" id="cb16-2" title="2"></a>
 <a class="sourceLine" id="cb16-3" title="3">data</a></code></pre></div>
