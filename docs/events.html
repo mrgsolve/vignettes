@@ -13,8 +13,8 @@
 
 <title>Work with event objects</title>
 
-<script src="site_libs/header-attrs-2.8/header-attrs.js"></script>
-<script src="site_libs/jquery-1.11.3/jquery.min.js"></script>
+<script src="site_libs/header-attrs-2.11/header-attrs.js"></script>
+<script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <link href="site_libs/bootstrap-3.3.5/css/bootstrap.min.css" rel="stylesheet" />
 <script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
@@ -423,7 +423,7 @@ div.tocify {
 </li>
 <li>
   <a href="https://github.com/mrgsolve/vignettes">
-    <span class="fas fa-github fa-lg"></span>
+    <span class="fa fa-github fa-lg"></span>
      
   </a>
 </li>
@@ -437,7 +437,7 @@ div.tocify {
 </li>
 <li>
   <a href="https://github.com/metrumresearchgroup/mrgsolve">
-    <span class="fas fa-code fa-lg"></span>
+    <span class="fa fa-code fa-lg"></span>
      
   </a>
 </li>
@@ -461,7 +461,7 @@ div.tocify {
 <p>Let’s illustrate event objects with a one-compartment, PK model. We read this model from the <code>mrgsolve</code> internal model library.</p>
 <div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>mod <span class="ot">&lt;-</span> <span class="fu">mread</span>(<span class="st">&quot;pk1cmt&quot;</span>, <span class="fu">modlib</span>(), <span class="at">end=</span><span class="dv">216</span>, <span class="at">delta=</span><span class="fl">0.1</span>)</span></code></pre></div>
 <div id="events" class="section level1" number="1">
-<h1 number="1"><span class="header-section-number">1</span> Events</h1>
+<h1><span class="header-section-number">1</span> Events</h1>
 <p>Events are constructed with the <code>ev</code> function</p>
 <div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>e <span class="ot">&lt;-</span> <span class="fu">ev</span>(<span class="at">amt=</span><span class="dv">100</span>, <span class="at">ii=</span><span class="dv">24</span>, <span class="at">addl=</span><span class="dv">6</span>)</span></code></pre></div>
 <p>This will implement 100 unit doses every 24 hours for a total of 7 doses. <code>e</code> has class <code>ev</code>, but really it is just a data frame</p>
@@ -483,7 +483,7 @@ div.tocify {
 <p><img src="events_files/figure-html/unnamed-chunk-6-1.png" width="672" /></p>
 </div>
 <div id="event-expectations" class="section level1" number="2">
-<h1 number="2"><span class="header-section-number">2</span> Event expectations</h1>
+<h1><span class="header-section-number">2</span> Event expectations</h1>
 <ol style="list-style-type: decimal">
 <li><code>amt</code> is required</li>
 <li><code>evid=0</code> is forbidden</li>
@@ -494,7 +494,7 @@ div.tocify {
 <p>Also by default, <code>rate</code>, <code>ss</code> and <code>ii</code> are 0.</p>
 </div>
 <div id="combine-events" class="section level1" number="3">
-<h1 number="3"><span class="header-section-number">3</span> Combine events</h1>
+<h1><span class="header-section-number">3</span> Combine events</h1>
 <p><code>mrgsolve</code> has operators defined that allow you to combine events. Let’s first define some event objects.</p>
 <div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>e1 <span class="ot">&lt;-</span> <span class="fu">ev</span>(<span class="at">amt=</span><span class="dv">500</span>)</span>
 <span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>e2 <span class="ot">&lt;-</span> <span class="fu">ev</span>(<span class="at">amt=</span><span class="dv">250</span>, <span class="at">ii=</span><span class="dv">24</span>, <span class="at">addl=</span><span class="dv">4</span>)</span>
@@ -514,7 +514,7 @@ div.tocify {
 . 2   24 250 24    4   1    1</code></pre>
 <p>Notice that <code>e3</code> has both <code>ii</code> and <code>addl</code> defined. This is required for <code>mrgsolve</code> to know when to start <code>e2</code>.</p>
 <div id="combine-to-create-a-data-set" class="section level2" number="3.1">
-<h2 number="3.1"><span class="header-section-number">3.1</span> Combine to create a data set</h2>
+<h2><span class="header-section-number">3.1</span> Combine to create a data set</h2>
 <p>We can take several event objects and combine them into a single simulation data frame with the <code>as_data_set</code> function.</p>
 <div class="sourceCode" id="cb15"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>e1 <span class="ot">&lt;-</span> <span class="fu">ev</span>(<span class="at">amt=</span><span class="dv">100</span>, <span class="at">ii=</span><span class="dv">24</span>, <span class="at">addl=</span><span class="dv">6</span>,  <span class="at">ID=</span><span class="dv">1</span><span class="sc">:</span><span class="dv">5</span>)</span>
 <span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>e2 <span class="ot">&lt;-</span> <span class="fu">ev</span>(<span class="at">amt=</span><span class="dv">50</span>,  <span class="at">ii=</span><span class="dv">12</span>, <span class="at">addl=</span><span class="dv">13</span>, <span class="at">ID=</span><span class="dv">1</span><span class="sc">:</span><span class="dv">3</span>)</span>
@@ -583,6 +583,9 @@ $(document).ready(function () {
 
 <script>
 $(document).ready(function ()  {
+
+    // temporarily add toc-ignore selector to headers for the consistency with Pandoc
+    $('.unlisted.unnumbered').addClass('toc-ignore')
 
     // move toc-ignore selectors from section div to header
     $('div.section.toc-ignore')

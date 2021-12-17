@@ -13,8 +13,8 @@
 
 <title>Quick Start</title>
 
-<script src="site_libs/header-attrs-2.8/header-attrs.js"></script>
-<script src="site_libs/jquery-1.11.3/jquery.min.js"></script>
+<script src="site_libs/header-attrs-2.11/header-attrs.js"></script>
+<script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <link href="site_libs/bootstrap-3.3.5/css/bootstrap.min.css" rel="stylesheet" />
 <script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
@@ -423,7 +423,7 @@ div.tocify {
 </li>
 <li>
   <a href="https://github.com/mrgsolve/vignettes">
-    <span class="fas fa-github fa-lg"></span>
+    <span class="fa fa-github fa-lg"></span>
      
   </a>
 </li>
@@ -437,7 +437,7 @@ div.tocify {
 </li>
 <li>
   <a href="https://github.com/metrumresearchgroup/mrgsolve">
-    <span class="fas fa-code fa-lg"></span>
+    <span class="fa fa-code fa-lg"></span>
      
   </a>
 </li>
@@ -457,7 +457,7 @@ div.tocify {
 
 <p>This vignette shows the user how to do their first simulation with mrgsolve.</p>
 <div id="load-a-model" class="section level1" number="1">
-<h1 number="1"><span class="header-section-number">1</span> Load a model</h1>
+<h1><span class="header-section-number">1</span> Load a model</h1>
 <p>After loading the package</p>
 <div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(mrgsolve)</span></code></pre></div>
 <p>we’ll use the <code>mread()</code> function to read, parse, compile and load a model out of the internal model library. Try calling the modlib function (<code>modlib()</code>) and see that the path to the installed package is returned, pointing to a directory of pre-coded models. These models are good to try when learning mrgsolve.</p>
@@ -470,7 +470,7 @@ div.tocify {
 . -----------------  source: pk1.cpp  -----------------
 . 
 .   project: /Users/kyleb/Rli...gsolve/models
-.   shared object: pk1-so-159b9f1c6397 
+.   shared object: pk1-so-df4a430dc4bb 
 . 
 .   time:          start: 0 end: 24 delta: 1
 .                  add: &lt;none&gt;
@@ -493,7 +493,7 @@ div.tocify {
 <p>We’ll see in the section below how to run a simulation from this model. But first, let’s create a dosing intervention to use with this model.</p>
 </div>
 <div id="create-an-intervention" class="section level1" number="2">
-<h1 number="2"><span class="header-section-number">2</span> Create an intervention</h1>
+<h1><span class="header-section-number">2</span> Create an intervention</h1>
 <p>The simplest way to create an intervention is to use an event object. This is just a simple expression of one or more model interventions (most frequently doses)</p>
 <div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>evnt <span class="ot">&lt;-</span> <span class="fu">ev</span>(<span class="at">amt =</span> <span class="dv">100</span>, <span class="at">ii =</span> <span class="dv">24</span>, <span class="at">addl =</span> <span class="dv">9</span>)</span></code></pre></div>
 <div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>evnt</span></code></pre></div>
@@ -504,7 +504,7 @@ div.tocify {
 <p>For now, the event object is just an intervention that we can combine with a model.</p>
 </div>
 <div id="simulate" class="section level1" number="3">
-<h1 number="3"><span class="header-section-number">3</span> Simulate</h1>
+<h1><span class="header-section-number">3</span> Simulate</h1>
 <p>To simulate, use the <code>mrgsim()</code> function.</p>
 <div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>out <span class="ot">&lt;-</span> mod <span class="sc">%&gt;%</span> <span class="fu">ev</span>(evnt) <span class="sc">%&gt;%</span> <span class="fu">mrgsim</span>(<span class="at">end =</span> <span class="dv">480</span>, <span class="at">delta =</span> <span class="fl">0.1</span>)</span></code></pre></div>
 <p>We use a pipe sequence here (<code>%&gt;%</code>) to pass the model object (<code>mod)</code> into the event function (<code>ev()</code>) where we attach the dosing intervention, and that result gets passed into the simulation function. The result of the simulation function is essentially a data frame of simulated values</p>
@@ -524,7 +524,7 @@ div.tocify {
 . 8:   1  0.6  54.88 44.383 2.2191</code></pre>
 </div>
 <div id="plot" class="section level1" number="4">
-<h1 number="4"><span class="header-section-number">4</span> Plot</h1>
+<h1><span class="header-section-number">4</span> Plot</h1>
 <p>mrgsolve comes with several different functions for processing output. One simple function is a plot method that will generate a plot of what was just simulated</p>
 <div class="sourceCode" id="cb13"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(out)</span></code></pre></div>
 <p><img src="01-get-started_files/figure-html/unnamed-chunk-9-1.png" width="672" /></p>
@@ -572,6 +572,9 @@ $(document).ready(function () {
 
 <script>
 $(document).ready(function ()  {
+
+    // temporarily add toc-ignore selector to headers for the consistency with Pandoc
+    $('.unlisted.unnumbered').addClass('toc-ignore')
 
     // move toc-ignore selectors from section div to header
     $('div.section.toc-ignore')

@@ -13,8 +13,8 @@
 
 <title>Modeled events</title>
 
-<script src="site_libs/header-attrs-2.8/header-attrs.js"></script>
-<script src="site_libs/jquery-1.11.3/jquery.min.js"></script>
+<script src="site_libs/header-attrs-2.11/header-attrs.js"></script>
+<script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <link href="site_libs/bootstrap-3.3.5/css/bootstrap.min.css" rel="stylesheet" />
 <script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
@@ -423,7 +423,7 @@ div.tocify {
 </li>
 <li>
   <a href="https://github.com/mrgsolve/vignettes">
-    <span class="fas fa-github fa-lg"></span>
+    <span class="fa fa-github fa-lg"></span>
      
   </a>
 </li>
@@ -437,7 +437,7 @@ div.tocify {
 </li>
 <li>
   <a href="https://github.com/metrumresearchgroup/mrgsolve">
-    <span class="fas fa-code fa-lg"></span>
+    <span class="fa fa-code fa-lg"></span>
      
   </a>
 </li>
@@ -458,49 +458,49 @@ div.tocify {
 <p>A modeled event is a discontinuity introduced into the simulation at a time and with characteristics that are determined within the model itself, rather than the standard setup of specifying these events via the data set.</p>
 <p>In this vignette, we’ll focus on creating a discontinuity in the simulation so that the value of a parameter can change at a specific time that is not necessarily chosen prior to the run time.</p>
 <div id="concept-mevent" class="section level1" number="1">
-<h1 number="1"><span class="header-section-number">1</span> Concept: mevent</h1>
+<h1><span class="header-section-number">1</span> Concept: mevent</h1>
 <p>This toy model shows how you can use <code>mevent()</code> to schedule a discontinuity into the simulation. This model doesn’t do anything, but will help us see what parts are in play.</p>
-<div class="sourceCode" id="cb1"><pre class="sourceCode cpp"><code class="sourceCode cpp"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>[ MAIN ]</span>
+<div class="sourceCode" id="cb1"><pre class="sourceCode cpp"><code class="sourceCode cpp"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="op">[</span> MAIN <span class="op">]</span></span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="co">// Part A</span></span>
-<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span>(NEWIND &lt;=<span class="dv">1</span>) <span class="dt">double</span> mtime = <span class="fl">1E10</span>;</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span><span class="op">(</span>NEWIND <span class="op">&lt;=</span><span class="dv">1</span><span class="op">)</span> <span class="dt">double</span> mtime <span class="op">=</span> <span class="fl">1E10</span><span class="op">;</span></span>
 <span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="co">// Part B</span></span>
-<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span>(EVID==<span class="dv">1</span>) {</span>
-<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>  mtime = TIME + <span class="fl">1.23</span>;</span>
-<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>  self.mevent(mtime, <span class="dv">33</span>);</span>
-<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span><span class="op">(</span>EVID<span class="op">==</span><span class="dv">1</span><span class="op">)</span> <span class="op">{</span></span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>  mtime <span class="op">=</span> TIME <span class="op">+</span> <span class="fl">1.23</span><span class="op">;</span></span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>  self<span class="op">.</span>mevent<span class="op">(</span>mtime<span class="op">,</span> <span class="dv">33</span><span class="op">);</span></span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span>
 <span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a><span class="co">// Part C</span></span>
-<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a>capture past  = TIME &gt;= mtime;</span></code></pre></div>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a>capture past  <span class="op">=</span> TIME <span class="op">&gt;=</span> mtime<span class="op">;</span></span></code></pre></div>
 <p>In contrast to the NONMEM <code>MTIME()</code> functionality, we have to do a little more work keeping track of the status of the system. There are multiple ways to organize this. I’m going to show you one way that tries to minimize the amount of this book keeping work.</p>
 <p>In the first part of <code>[ MAIN ]</code>, I will create a variable called <code>mtime</code> and initialize it to some large, arbitrary value. This is the time of the modeled event and we will eventually want to check to see if we are past this time. Initializing to this large .value will ensure we aren’t past <code>mtime</code> when the problem starts. This is Part A.</p>
 <div class="sourceCode" id="cb2"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co">// Part A</span></span>
-<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span>(NEWIND &lt;=<span class="dv">1</span> ) capture mtime  = <span class="fl">1E10</span>;</span></code></pre></div>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span><span class="op">(</span>NEWIND <span class="op">&lt;=</span><span class="dv">1</span> <span class="op">)</span> capture mtime  <span class="op">=</span> <span class="fl">1E10</span><span class="op">;</span></span></code></pre></div>
 <p>Next, we’ll come up with some condition that will trigger the creation of the future discontinuity. In this example, we’ll check to see when a dose was given and schedule the event <code>1.23</code> hours into the future. We keep track of that future time in the <code>mtime</code> variable. That’s Part B.</p>
 <div class="sourceCode" id="cb3"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co">// Part B</span></span>
-<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span>(EVID==<span class="dv">1</span>) {</span>
-<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>  mtime = TIME + <span class="fl">1.23</span>;</span>
-<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>  self.mevent(mtime, <span class="dv">33</span>);</span>
-<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span><span class="op">(</span>EVID<span class="op">==</span><span class="dv">1</span><span class="op">)</span> <span class="op">{</span></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>  mtime <span class="op">=</span> TIME <span class="op">+</span> <span class="fl">1.23</span><span class="op">;</span></span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>  self<span class="op">.</span>mevent<span class="op">(</span>mtime<span class="op">,</span> <span class="dv">33</span><span class="op">);</span></span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
 <p>There is a function in the <code>self</code> object called <code>mevent()</code> that takes two arguments: first the <code>TIME</code> of the event and second the <code>EVID</code>. In this example, we create a record with <code>EVID</code> of 33 at 1.23 hours after the dose. We pick <code>EVID</code> 33 as a unique flag for this event. But beyond that, the specific value isn’t important.</p>
 <p>The final piece of this toy model is to check to see if the system has been advanced past <code>mtime</code>.</p>
 <div class="sourceCode" id="cb4"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co">// Part C</span></span>
-<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>capture past = TIME &gt;= mtime;</span></code></pre></div>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>capture past <span class="op">=</span> TIME <span class="op">&gt;=</span> mtime<span class="op">;</span></span></code></pre></div>
 <p>To put it all back together</p>
-<div class="sourceCode" id="cb5"><pre class="sourceCode cpp"><code class="sourceCode cpp"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>[ MAIN ]</span>
+<div class="sourceCode" id="cb5"><pre class="sourceCode cpp"><code class="sourceCode cpp"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="op">[</span> MAIN <span class="op">]</span></span>
 <span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a><span class="co">// Part A</span></span>
-<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span>(NEWIND &lt;=<span class="dv">1</span>) <span class="dt">double</span> mtime = <span class="fl">1E10</span>;</span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span><span class="op">(</span>NEWIND <span class="op">&lt;=</span><span class="dv">1</span><span class="op">)</span> <span class="dt">double</span> mtime <span class="op">=</span> <span class="fl">1E10</span><span class="op">;</span></span>
 <span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a><span class="co">// Part B</span></span>
-<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span>(EVID==<span class="dv">1</span>) {</span>
-<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a>  mtime = TIME + <span class="fl">1.23</span>;</span>
-<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a>  self.mevent(mtime, <span class="dv">33</span>);</span>
-<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span><span class="op">(</span>EVID<span class="op">==</span><span class="dv">1</span><span class="op">)</span> <span class="op">{</span></span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a>  mtime <span class="op">=</span> TIME <span class="op">+</span> <span class="fl">1.23</span><span class="op">;</span></span>
+<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a>  self<span class="op">.</span>mevent<span class="op">(</span>mtime<span class="op">,</span> <span class="dv">33</span><span class="op">);</span></span>
+<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span>
 <span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb5-12"><a href="#cb5-12" aria-hidden="true" tabindex="-1"></a><span class="co">// Part C</span></span>
-<span id="cb5-13"><a href="#cb5-13" aria-hidden="true" tabindex="-1"></a>capture past  = TIME &gt;= mtime;</span></code></pre></div>
+<span id="cb5-13"><a href="#cb5-13" aria-hidden="true" tabindex="-1"></a>capture past  <span class="op">=</span> TIME <span class="op">&gt;=</span> mtime<span class="op">;</span></span></code></pre></div>
 <p>Now run this model to check the output. We want to see when the <code>past</code> variable switches to 1.</p>
 <div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(mrgsolve)</span>
 <span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a></span>
@@ -521,26 +521,26 @@ div.tocify {
 ## 8:   1    6    1</code></pre>
 <p>The switch happens at time 1.23, between time 1 and time 2. You can use the <code>mrgsolve::report()</code> function to check that the <code>EVID==33</code> event happens at the proper time (not able to display this inside the vignette). This is an optional Part D.</p>
 <div class="sourceCode" id="cb9"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="co">// Part D</span></span>
-<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span>(EVID==<span class="dv">33</span>) mrgsolve::report(TIME);  </span></code></pre></div>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span><span class="op">(</span>EVID<span class="op">==</span><span class="dv">33</span><span class="op">)</span> mrgsolve<span class="op">::</span>report<span class="op">(</span>TIME<span class="op">);</span>  </span></code></pre></div>
 <p>So we can check that the model is actually stopping at this point (TIME 1.23). Note that this time is not included in the simulation time grid.</p>
 </div>
 <div id="application-time-varying-ka" class="section level1" number="2">
-<h1 number="2"><span class="header-section-number">2</span> Application: time-varying KA</h1>
+<h1><span class="header-section-number">2</span> Application: time-varying KA</h1>
 <p>We can put this principle into action with a PK model where KA changes (increases) some time after the administration of the dose. Here’s the model</p>
-<div class="sourceCode" id="cb10"><pre class="sourceCode cpp"><code class="sourceCode cpp"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>[ PARAM ] CL = <span class="fl">1.5</span>, V = <span class="dv">8</span>, KA1 = <span class="fl">0.2</span>, KA2 = <span class="fl">3.8</span></span>
+<div class="sourceCode" id="cb10"><pre class="sourceCode cpp"><code class="sourceCode cpp"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="op">[</span> PARAM <span class="op">]</span> CL <span class="op">=</span> <span class="fl">1.5</span><span class="op">,</span> V <span class="op">=</span> <span class="dv">8</span><span class="op">,</span> KA1 <span class="op">=</span> <span class="fl">0.2</span><span class="op">,</span> KA2 <span class="op">=</span> <span class="fl">3.8</span></span>
 <span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>[ PKMODEL ] cmt = <span class="st">&quot;GUT CENT&quot;</span>, depot = TRUE</span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a><span class="op">[</span> PKMODEL <span class="op">]</span> cmt <span class="op">=</span> <span class="st">&quot;GUT CENT&quot;</span><span class="op">,</span> depot <span class="op">=</span> TRUE</span>
 <span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>[ MAIN ]</span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a><span class="op">[</span> MAIN <span class="op">]</span></span>
 <span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span>(NEWIND &lt;=<span class="dv">1</span>) <span class="dt">double</span> mtime = <span class="fl">1E10</span>;</span>
+<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span><span class="op">(</span>NEWIND <span class="op">&lt;=</span><span class="dv">1</span><span class="op">)</span> <span class="dt">double</span> mtime <span class="op">=</span> <span class="fl">1E10</span><span class="op">;</span></span>
 <span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-9"><a href="#cb10-9" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span>(EVID==<span class="dv">1</span>) {</span>
-<span id="cb10-10"><a href="#cb10-10" aria-hidden="true" tabindex="-1"></a>  mtime = TIME + <span class="fl">1.23</span>;</span>
-<span id="cb10-11"><a href="#cb10-11" aria-hidden="true" tabindex="-1"></a>  self.mevent(mtime, <span class="dv">33</span>);</span>
-<span id="cb10-12"><a href="#cb10-12" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb10-9"><a href="#cb10-9" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span><span class="op">(</span>EVID<span class="op">==</span><span class="dv">1</span><span class="op">)</span> <span class="op">{</span></span>
+<span id="cb10-10"><a href="#cb10-10" aria-hidden="true" tabindex="-1"></a>  mtime <span class="op">=</span> TIME <span class="op">+</span> <span class="fl">1.23</span><span class="op">;</span></span>
+<span id="cb10-11"><a href="#cb10-11" aria-hidden="true" tabindex="-1"></a>  self<span class="op">.</span>mevent<span class="op">(</span>mtime<span class="op">,</span> <span class="dv">33</span><span class="op">);</span></span>
+<span id="cb10-12"><a href="#cb10-12" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span>
 <span id="cb10-13"><a href="#cb10-13" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-14"><a href="#cb10-14" aria-hidden="true" tabindex="-1"></a>capture KA = TIME &gt;= mtime ? KA2 : KA1;</span></code></pre></div>
+<span id="cb10-14"><a href="#cb10-14" aria-hidden="true" tabindex="-1"></a>capture KA <span class="op">=</span> TIME <span class="op">&gt;=</span> mtime <span class="op">?</span> KA2 <span class="op">:</span> KA1<span class="op">;</span></span></code></pre></div>
 <p>We have pretty much the same setup as the toy example above, but now including a PK model where KA changes from <code>KA1</code> to <code>KA2</code> at <code>mtime</code></p>
 <div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>mod <span class="ot">&lt;-</span> <span class="fu">mread</span>(<span class="st">&quot;mevent_1&quot;</span>, <span class="at">req =</span> <span class="st">&quot;CENT&quot;</span>, <span class="at">end =</span> <span class="dv">12</span>, <span class="at">delta =</span> <span class="fl">0.1</span>)</span></code></pre></div>
 <p>When we simulate, we see KA increase at the change point as well as the rate of increase in the <code>CENT</code> compartment</p>
@@ -599,6 +599,9 @@ $(document).ready(function () {
 
 <script>
 $(document).ready(function ()  {
+
+    // temporarily add toc-ignore selector to headers for the consistency with Pandoc
+    $('.unlisted.unnumbered').addClass('toc-ignore')
 
     // move toc-ignore selectors from section div to header
     $('div.section.toc-ignore')
