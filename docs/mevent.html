@@ -457,8 +457,8 @@ div.tocify {
 
 <p>A modeled event is a discontinuity introduced into the simulation at a time and with characteristics that are determined within the model itself, rather than the standard setup of specifying these events via the data set.</p>
 <p>In this vignette, we’ll focus on creating a discontinuity in the simulation so that the value of a parameter can change at a specific time that is not necessarily chosen prior to the run time.</p>
-<div id="concept-mevent" class="section level1" number="1">
-<h1><span class="header-section-number">1</span> Concept: mevent</h1>
+<div id="concept-mevent" class="section level1">
+<h1>Concept: mevent</h1>
 <p>This toy model shows how you can use <code>mevent()</code> to schedule a discontinuity into the simulation. This model doesn’t do anything, but will help us see what parts are in play.</p>
 <div class="sourceCode" id="cb1"><pre class="sourceCode cpp"><code class="sourceCode cpp"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="op">[</span> MAIN <span class="op">]</span></span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a></span>
@@ -524,8 +524,8 @@ div.tocify {
 <span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span><span class="op">(</span>EVID<span class="op">==</span><span class="dv">33</span><span class="op">)</span> mrgsolve<span class="op">::</span>report<span class="op">(</span>TIME<span class="op">);</span>  </span></code></pre></div>
 <p>So we can check that the model is actually stopping at this point (TIME 1.23). Note that this time is not included in the simulation time grid.</p>
 </div>
-<div id="application-time-varying-ka" class="section level1" number="2">
-<h1><span class="header-section-number">2</span> Application: time-varying KA</h1>
+<div id="application-time-varying-ka" class="section level1">
+<h1>Application: time-varying KA</h1>
 <p>We can put this principle into action with a PK model where KA changes (increases) some time after the administration of the dose. Here’s the model</p>
 <div class="sourceCode" id="cb10"><pre class="sourceCode cpp"><code class="sourceCode cpp"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="op">[</span> PARAM <span class="op">]</span> CL <span class="op">=</span> <span class="fl">1.5</span><span class="op">,</span> V <span class="op">=</span> <span class="dv">8</span><span class="op">,</span> KA1 <span class="op">=</span> <span class="fl">0.2</span><span class="op">,</span> KA2 <span class="op">=</span> <span class="fl">3.8</span></span>
 <span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a></span>

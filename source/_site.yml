@@ -27,7 +27,7 @@ output:
       css: [css/styles.css, css/colors.css]
       toc: true
       toc_float: true
-      number_sections: true
+      number_sections: false
       includes:
         after_body:
           footer.html

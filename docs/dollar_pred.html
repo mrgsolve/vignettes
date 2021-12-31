@@ -456,12 +456,12 @@ div.tocify {
 
 
 <p>This vignette introduces a new formal code block for writing models where there are no compartments. The block is named after the analogous NONMEM block called <code>$PRED</code>. This functionality has always been possible with mrgsolve, but only now is there a code block dedicated to these models. Also, a relaxed set of data set constraints have been put in place when these types of models are invoked.</p>
-<div id="status" class="section level1" number="1">
-<h1><span class="header-section-number">1</span> Status</h1>
+<div id="status" class="section level1">
+<h1>Status</h1>
 <p>The functionality in this vignette can only be access from the GitHub version. We will update this vignette once these features are rolled into a release on CRAN.</p>
 </div>
-<div id="example-model" class="section level1" number="2">
-<h1><span class="header-section-number">2</span> Example model</h1>
+<div id="example-model" class="section level1">
+<h1>Example model</h1>
 <p>As a most-basic model, we look at the <code>pred1</code> model in <code>modlib()</code></p>
 <div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(mrgsolve)</span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>mod <span class="ot">&lt;-</span> <span class="fu">mread_cache</span>(<span class="st">&quot;pred1&quot;</span>, <span class="fu">modlib</span>())</span></code></pre></div>
@@ -519,8 +519,8 @@ div.tocify {
 <span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">plot</span>(Y <span class="sc">~</span> B)</span></code></pre></div>
 <p><img src="dollar_pred_files/figure-html/unnamed-chunk-5-1.png" width="672" /></p>
 </div>
-<div id="pkpd-model" class="section level1" number="3">
-<h1><span class="header-section-number">3</span> PK/PD Model</h1>
+<div id="pkpd-model" class="section level1">
+<h1>PK/PD Model</h1>
 <p>Here is an implementation of a PK/PD model using <code>$PRED</code></p>
 <p>In this model</p>
 <ul>
