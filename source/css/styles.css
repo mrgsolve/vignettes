@@ -1,8 +1,8 @@
 .list-group-item.active, .list-group-item.active:focus, .list-group-item.active:hover {
-    background-color: green;
+    background-color: #097f5f;
 }
 .mrgg {
-  color: green;
+  color: #097f5f;
 }
 .spacer {
   min-height: 150px;
@@ -12,7 +12,7 @@
 }
 
 a {
-  color: green;
+  color: #097f5f;
 }
 
 
@@ -89,7 +89,7 @@ kbd {
   color: #ffffff;
   text-decoration: none;
   outline: 0;
-  background-color: green;
+  background-color: #097f5f;
 }
 .dropdown-menu>li>a,
 .navbar-default .navbar-nav .open .dropdown-menu>li>a{

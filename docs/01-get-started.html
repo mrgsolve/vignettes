@@ -13,7 +13,7 @@
 
 <title>Quick Start</title>
 
-<script src="site_libs/header-attrs-2.11/header-attrs.js"></script>
+<script src="site_libs/header-attrs-2.13/header-attrs.js"></script>
 <script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <link href="site_libs/bootstrap-3.3.5/css/bootstrap.min.css" rel="stylesheet" />
@@ -52,6 +52,7 @@
   div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
   ul.task-list{list-style: none;}
     </style>
+
 
 
 <style type="text/css">
@@ -178,6 +179,9 @@ button.code-folding-btn:focus {
 }
 summary {
   display: list-item;
+}
+details > summary > p:only-child {
+  display: inline;
 }
 pre code {
   padding: 0;
@@ -403,7 +407,7 @@ div.tocify {
 <div class="navbar navbar-default  navbar-fixed-top" role="navigation">
   <div class="container">
     <div class="navbar-header">
-      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-bs-toggle="collapse" data-target="#navbar" data-bs-target="#navbar">
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
@@ -455,15 +459,22 @@ div.tocify {
 </div>
 
 
-<p>This vignette shows the user how to do their first simulation with mrgsolve.</p>
+<p>This vignette shows the user how to do their first simulation with
+mrgsolve.</p>
 <div id="load-a-model" class="section level1">
 <h1>Load a model</h1>
 <p>After loading the package</p>
 <div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(mrgsolve)</span></code></pre></div>
-<p>we’ll use the <code>mread()</code> function to read, parse, compile and load a model out of the internal model library. Try calling the modlib function (<code>modlib()</code>) and see that the path to the installed package is returned, pointing to a directory of pre-coded models. These models are good to try when learning mrgsolve.</p>
-<p>For this first example, we’re using a one compartment model (called <code>pk1</code> in the model library)</p>
+<p>we’ll use the <code>mread()</code> function to read, parse, compile
+and load a model out of the internal model library. Try calling the
+modlib function (<code>modlib()</code>) and see that the path to the
+installed package is returned, pointing to a directory of pre-coded
+models. These models are good to try when learning mrgsolve.</p>
+<p>For this first example, we’re using a one compartment model (called
+<code>pk1</code> in the model library)</p>
 <div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>mod <span class="ot">&lt;-</span> <span class="fu">mread_cache</span>(<span class="st">&quot;pk1&quot;</span>, <span class="fu">modlib</span>())</span></code></pre></div>
-<p>Once we create the model object (<code>mod</code>) we can extract certain information about the model. For example, get an overview</p>
+<p>Once we create the model object (<code>mod</code>) we can extract
+certain information about the model. For example, get an overview</p>
 <div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>mod</span></code></pre></div>
 <pre><code>. 
 . 
@@ -490,24 +501,35 @@ div.tocify {
 .  name value . name value
 .  CL   1     | V    20   
 .  KA   1     | .    .</code></pre>
-<p>We’ll see in the section below how to run a simulation from this model. But first, let’s create a dosing intervention to use with this model.</p>
+<p>We’ll see in the section below how to run a simulation from this
+model. But first, let’s create a dosing intervention to use with this
+model.</p>
 </div>
 <div id="create-an-intervention" class="section level1">
 <h1>Create an intervention</h1>
-<p>The simplest way to create an intervention is to use an event object. This is just a simple expression of one or more model interventions (most frequently doses)</p>
+<p>The simplest way to create an intervention is to use an event object.
+This is just a simple expression of one or more model interventions
+(most frequently doses)</p>
 <div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>evnt <span class="ot">&lt;-</span> <span class="fu">ev</span>(<span class="at">amt =</span> <span class="dv">100</span>, <span class="at">ii =</span> <span class="dv">24</span>, <span class="at">addl =</span> <span class="dv">9</span>)</span></code></pre></div>
 <div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>evnt</span></code></pre></div>
 <pre><code>. Events:
 .   time amt ii addl cmt evid
 . 1    0 100 24    9   1    1</code></pre>
-<p>We’ll see in other vignettes how to create more-complicated events as well as how to create larger data sets with many individuals in them.</p>
-<p>For now, the event object is just an intervention that we can combine with a model.</p>
+<p>We’ll see in other vignettes how to create more-complicated events as
+well as how to create larger data sets with many individuals in
+them.</p>
+<p>For now, the event object is just an intervention that we can combine
+with a model.</p>
 </div>
 <div id="simulate" class="section level1">
 <h1>Simulate</h1>
 <p>To simulate, use the <code>mrgsim()</code> function.</p>
 <div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>out <span class="ot">&lt;-</span> mod <span class="sc">%&gt;%</span> <span class="fu">ev</span>(evnt) <span class="sc">%&gt;%</span> <span class="fu">mrgsim</span>(<span class="at">end =</span> <span class="dv">480</span>, <span class="at">delta =</span> <span class="fl">0.1</span>)</span></code></pre></div>
-<p>We use a pipe sequence here (<code>%&gt;%</code>) to pass the model object (<code>mod)</code> into the event function (<code>ev()</code>) where we attach the dosing intervention, and that result gets passed into the simulation function. The result of the simulation function is essentially a data frame of simulated values</p>
+<p>We use a pipe sequence here (<code>%&gt;%</code>) to pass the model
+object (<code>mod)</code> into the event function (<code>ev()</code>)
+where we attach the dosing intervention, and that result gets passed
+into the simulation function. The result of the simulation function is
+essentially a data frame of simulated values</p>
 <div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>out</span></code></pre></div>
 <pre><code>. Model:  pk1 
 . Dim:    4802 x 5 
@@ -525,7 +547,9 @@ div.tocify {
 </div>
 <div id="plot" class="section level1">
 <h1>Plot</h1>
-<p>mrgsolve comes with several different functions for processing output. One simple function is a plot method that will generate a plot of what was just simulated</p>
+<p>mrgsolve comes with several different functions for processing
+output. One simple function is a plot method that will generate a plot
+of what was just simulated</p>
 <div class="sourceCode" id="cb13"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(out)</span></code></pre></div>
 <p><img src="01-get-started_files/figure-html/unnamed-chunk-9-1.png" width="672" /></p>
 </div>

@@ -13,7 +13,7 @@
 
 <title>Quick hit demos</title>
 
-<script src="site_libs/header-attrs-2.11/header-attrs.js"></script>
+<script src="site_libs/header-attrs-2.13/header-attrs.js"></script>
 <script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <link href="site_libs/bootstrap-3.3.5/css/bootstrap.min.css" rel="stylesheet" />
@@ -52,6 +52,7 @@
   div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
   ul.task-list{list-style: none;}
     </style>
+
 
 
 <style type="text/css">
@@ -178,6 +179,9 @@ button.code-folding-btn:focus {
 }
 summary {
   display: list-item;
+}
+details > summary > p:only-child {
+  display: inline;
 }
 pre code {
   padding: 0;
@@ -403,7 +407,7 @@ div.tocify {
 <div class="navbar navbar-default  navbar-fixed-top" role="navigation">
   <div class="container">
     <div class="navbar-header">
-      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-bs-toggle="collapse" data-target="#navbar" data-bs-target="#navbar">
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
@@ -455,11 +459,14 @@ div.tocify {
 </div>
 
 
-<p>These are all miscellaneous features that may be difficult to find in other documentation.</p>
+<p>These are all miscellaneous features that may be difficult to find in
+other documentation.</p>
 <div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(mrgsolve)</span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(dplyr)</span></code></pre></div>
-<div id="operator-for-model-object-gets-the-parameter-value" class="section level1">
-<h1><code>$</code> operator for model object gets the parameter value</h1>
+<div id="operator-for-model-object-gets-the-parameter-value"
+class="section level1">
+<h1><code>$</code> operator for model object gets the parameter
+value</h1>
 <p>If our model parameters are</p>
 <div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>mod <span class="ot">&lt;-</span> mrgsolve<span class="sc">:::</span><span class="fu">house</span>()</span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a></span>
@@ -519,18 +526,21 @@ div.tocify {
 <p>or get all of the model elements in a list (output not shown)</p>
 <div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>my_model <span class="ot">&lt;-</span> <span class="fu">as.list</span>(mod)</span></code></pre></div>
 </div>
-<div id="zero-all-random-effect-variances-on-the-fly" class="section level1">
+<div id="zero-all-random-effect-variances-on-the-fly"
+class="section level1">
 <h1>Zero all random effect variances on the fly</h1>
-<p>If your model has random effects, you can easily and temporarily zero them out.</p>
+<p>If your model has random effects, you can easily and temporarily zero
+them out.</p>
 <div class="sourceCode" id="cb13"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>mod <span class="ot">&lt;-</span> <span class="fu">modlib</span>(<span class="st">&quot;popex&quot;</span>) <span class="sc">%&gt;%</span> <span class="fu">update</span>(<span class="at">end=</span><span class="dv">96</span>) <span class="sc">%&gt;%</span> <span class="fu">Req</span>(DV,CL,V)</span></code></pre></div>
-<pre><code>. Loading model from cache.</code></pre>
+<pre><code>. Building popex ... done.</code></pre>
 <div class="sourceCode" id="cb15"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="fu">omat</span>(mod)</span></code></pre></div>
 <pre><code>. $...
 .       [,1] [,2] [,3]
 . ECL:   0.3  0.0  0.0
 . EV:    0.0  0.1  0.0
 . EKA:   0.0  0.0  0.5</code></pre>
-<p>It is easy to simulate either with or without the random effects in the simulation: this change can be made on the fly.</p>
+<p>It is easy to simulate either with or without the random effects in
+the simulation: this change can be made on the fly.</p>
 <p>Use <code>zero_re</code> to make all random effect variances zero</p>
 <div class="sourceCode" id="cb17"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>mod <span class="sc">%&gt;%</span> zero_re <span class="sc">%&gt;%</span> omat</span></code></pre></div>
 <pre><code>. $...
@@ -538,7 +548,9 @@ div.tocify {
 . ECL:     0    0    0
 . EV:      0    0    0
 . EKA:     0    0    0</code></pre>
-<p>By default, both <code>OMEGA</code> and <code>SIGMA</code> are zeroed. Check the arguments for <code>zero_re</code> to see how to selectively zero <code>OMEGA</code> or <code>SIGMA</code>.</p>
+<p>By default, both <code>OMEGA</code> and <code>SIGMA</code> are
+zeroed. Check the arguments for <code>zero_re</code> to see how to
+selectively zero <code>OMEGA</code> or <code>SIGMA</code>.</p>
 <p>Compare the population output</p>
 <div class="sourceCode" id="cb19"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a>mod <span class="sc">%&gt;%</span> <span class="fu">ev</span>(<span class="at">amt=</span><span class="dv">100</span>) <span class="sc">%&gt;%</span> <span class="fu">mrgsim</span>(<span class="at">nid=</span><span class="dv">20</span>) <span class="sc">%&gt;%</span> plot</span></code></pre></div>
 <p><img src="quick_files/figure-html/unnamed-chunk-9-1.png" width="672" /></p>
@@ -548,18 +560,21 @@ div.tocify {
 </div>
 <div id="plot-formulae" class="section level1">
 <h1>Plot formulae</h1>
-<p>We commonly plot simulated output with a special plot method. By default, you get all compartments and output variables in the plot.</p>
+<p>We commonly plot simulated output with a special plot method. By
+default, you get all compartments and output variables in the plot.</p>
 <div class="sourceCode" id="cb21"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a>mod <span class="ot">&lt;-</span> mrgsolve<span class="sc">:::</span><span class="fu">house</span>() <span class="sc">%&gt;%</span> <span class="fu">ev</span>(<span class="at">amt=</span><span class="dv">100</span>)</span>
 <span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a>mod <span class="sc">%&gt;%</span> mrgsim <span class="sc">%&gt;%</span> plot</span></code></pre></div>
 <p><img src="quick_files/figure-html/unnamed-chunk-11-1.png" width="672" /></p>
-<p>The plot can be customized with a formula selecting variables to plot. Other arguments</p>
+<p>The plot can be customized with a formula selecting variables to
+plot. Other arguments</p>
 <p>to <code>lattice::xyplot</code> can be passed as well.</p>
 <div class="sourceCode" id="cb22"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a>mod <span class="sc">%&gt;%</span> mrgsim <span class="sc">%&gt;%</span> <span class="fu">plot</span>(CP<span class="sc">+</span>RESP <span class="sc">~</span> time, <span class="at">lty=</span><span class="dv">2</span>, <span class="at">col=</span><span class="st">&quot;firebrick&quot;</span>)</span></code></pre></div>
 <p><img src="quick_files/figure-html/unnamed-chunk-12-1.png" width="672" /></p>
 </div>
 <div id="get-a-data-frame-of-simulated-data" class="section level1">
 <h1>Get a data frame of simulated data</h1>
-<p>By default mrgsolve returns an object of simulated data (and other stuff)</p>
+<p>By default mrgsolve returns an object of simulated data (and other
+stuff)</p>
 <div class="sourceCode" id="cb23"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a>out <span class="ot">&lt;-</span> <span class="fu">mrgsim</span>(mod)</span>
 <span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a><span class="fu">class</span>(out)</span></code></pre></div>

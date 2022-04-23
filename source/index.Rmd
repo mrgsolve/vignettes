@@ -21,7 +21,7 @@ knitr::opts_chunk$set(cache=TRUE)
 <div class="row" style="padding-top: 30px; width: 90%">
 <!--div class="col-sm-6"-->
 
-# **mrgsolve <grn>Vignettes</grn>** <img src="images/mrgsolve_hex.png" align="right" width="150px"></img>
+# **mrgsolve <grn>Vignettes</grn>** <img src="images/MRG-Solve-Hex.png" align="right" width="200px"></img>
 
 mrgsolve is an R package for simulation from hierarchical, ordinary differential 
 equation (ODE) based models typically employed in drug development.

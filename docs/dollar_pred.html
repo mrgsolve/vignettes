@@ -13,7 +13,7 @@
 
 <title>Models without compartments ($PRED)</title>
 
-<script src="site_libs/header-attrs-2.11/header-attrs.js"></script>
+<script src="site_libs/header-attrs-2.13/header-attrs.js"></script>
 <script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <link href="site_libs/bootstrap-3.3.5/css/bootstrap.min.css" rel="stylesheet" />
@@ -52,6 +52,7 @@
   div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
   ul.task-list{list-style: none;}
     </style>
+
 
 
 <style type="text/css">
@@ -178,6 +179,9 @@ button.code-folding-btn:focus {
 }
 summary {
   display: list-item;
+}
+details > summary > p:only-child {
+  display: inline;
 }
 pre code {
   padding: 0;
@@ -403,7 +407,7 @@ div.tocify {
 <div class="navbar navbar-default  navbar-fixed-top" role="navigation">
   <div class="container">
     <div class="navbar-header">
-      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-bs-toggle="collapse" data-target="#navbar" data-bs-target="#navbar">
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
@@ -455,14 +459,22 @@ div.tocify {
 </div>
 
 
-<p>This vignette introduces a new formal code block for writing models where there are no compartments. The block is named after the analogous NONMEM block called <code>$PRED</code>. This functionality has always been possible with mrgsolve, but only now is there a code block dedicated to these models. Also, a relaxed set of data set constraints have been put in place when these types of models are invoked.</p>
+<p>This vignette introduces a new formal code block for writing models
+where there are no compartments. The block is named after the analogous
+NONMEM block called <code>$PRED</code>. This functionality has always
+been possible with mrgsolve, but only now is there a code block
+dedicated to these models. Also, a relaxed set of data set constraints
+have been put in place when these types of models are invoked.</p>
 <div id="status" class="section level1">
 <h1>Status</h1>
-<p>The functionality in this vignette can only be access from the GitHub version. We will update this vignette once these features are rolled into a release on CRAN.</p>
+<p>The functionality in this vignette can only be access from the GitHub
+version. We will update this vignette once these features are rolled
+into a release on CRAN.</p>
 </div>
 <div id="example-model" class="section level1">
 <h1>Example model</h1>
-<p>As a most-basic model, we look at the <code>pred1</code> model in <code>modlib()</code></p>
+<p>As a most-basic model, we look at the <code>pred1</code> model in
+<code>modlib()</code></p>
 <div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(mrgsolve)</span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>mod <span class="ot">&lt;-</span> <span class="fu">mread_cache</span>(<span class="st">&quot;pred1&quot;</span>, <span class="fu">modlib</span>())</span></code></pre></div>
 <pre><code>## Building pred1 ... done.</code></pre>
@@ -475,9 +487,18 @@ div.tocify {
 <span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a><span class="dt">double</span> beta0i <span class="op">=</span> beta0 <span class="op">+</span> ETA<span class="op">(</span><span class="dv">1</span><span class="op">);</span></span>
 <span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a><span class="dt">double</span> beta1i <span class="op">=</span> beta1<span class="op">*</span>exp<span class="op">(</span>ETA<span class="op">(</span><span class="dv">2</span><span class="op">));</span></span>
 <span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>capture Y <span class="op">=</span> beta0i <span class="op">+</span> beta1i<span class="op">*</span>B<span class="op">;</span></span></code></pre></div>
-<p>This is a random-intercept, random slope linear model. Like other models in mrgsolve, you can write parameters (<code>$PARAM</code>), and random effects (<code>$OMEGA</code>). But the model is actually written in <code>$PRED</code>.</p>
-<p>When mrgsolve finds <code>$PRED</code>, it will generate an error if it also finds <code>$MAIN</code>, <code>$TABLE</code>, or <code>$ODE</code>. However, the code that gets entered into <code>$PRED</code> would function exactly as if you put it in <code>$TABLE</code>.</p>
-<p>In the example model, the response is a function of the parameter <code>B</code>, so we’ll generate an input data set with some values of <code>B</code></p>
+<p>This is a random-intercept, random slope linear model. Like other
+models in mrgsolve, you can write parameters (<code>$PARAM</code>), and
+random effects (<code>$OMEGA</code>). But the model is actually written
+in <code>$PRED</code>.</p>
+<p>When mrgsolve finds <code>$PRED</code>, it will generate an error if
+it also finds <code>$MAIN</code>, <code>$TABLE</code>, or
+<code>$ODE</code>. However, the code that gets entered into
+<code>$PRED</code> would function exactly as if you put it in
+<code>$TABLE</code>.</p>
+<p>In the example model, the response is a function of the parameter
+<code>B</code>, so we’ll generate an input data set with some values of
+<code>B</code></p>
 <div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(dplyr)</span>
 <span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>data <span class="ot">&lt;-</span> <span class="fu">data_frame</span>(<span class="at">ID =</span> <span class="dv">1</span>, <span class="at">B =</span> <span class="fu">exp</span>(<span class="fu">rnorm</span>(<span class="dv">100</span>, <span class="dv">0</span>,<span class="dv">2</span>)))</span></code></pre></div>
 <pre><code>## Warning: `data_frame()` was deprecated in tibble 1.1.0.
@@ -521,12 +542,16 @@ div.tocify {
 </div>
 <div id="pkpd-model" class="section level1">
 <h1>PK/PD Model</h1>
-<p>Here is an implementation of a PK/PD model using <code>$PRED</code></p>
+<p>Here is an implementation of a PK/PD model using
+<code>$PRED</code></p>
 <p>In this model</p>
 <ul>
-<li>Calculate <code>CL</code> as a function of <code>WT</code> and a random effect</li>
-<li>Derive <code>AUC</code> from <code>CL</code> and <code>DOSE</code></li>
-<li>The response (<code>Y</code>) is a calculated from <code>AUC</code> and the Emax model parameters</li>
+<li>Calculate <code>CL</code> as a function of <code>WT</code> and a
+random effect</li>
+<li>Derive <code>AUC</code> from <code>CL</code> and
+<code>DOSE</code></li>
+<li>The response (<code>Y</code>) is a calculated from <code>AUC</code>
+and the Emax model parameters</li>
 </ul>
 <div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>code <span class="ot">&lt;-</span> <span class="st">&#39;</span></span>
 <span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a><span class="st">$PARAM TVCL = 1, WT = 70, AUC50 = 20, DOSE = 100, E0 = 35, EMAX = 2.4</span></span>
@@ -565,7 +590,8 @@ div.tocify {
 ## 4  4    0 170.78136  110  23.68354  80.29131
 ## 5  5    0 248.18054  200 331.10229 108.81926
 ## 6  6    0  51.22012   30 251.58373 116.09649</code></pre>
-<p>Plot the response (<code>Y</code>) versus <code>AUC</code>, colored by dose</p>
+<p>Plot the response (<code>Y</code>) versus <code>AUC</code>, colored
+by dose</p>
 <div class="sourceCode" id="cb19"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggplot2)</span>
 <span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(out, <span class="fu">aes</span>(AUC,Y,<span class="at">col =</span><span class="fu">factor</span>(DOSE))) <span class="sc">+</span> </span>
