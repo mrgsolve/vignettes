@@ -532,7 +532,7 @@ class="section level1">
 <p>If your model has random effects, you can easily and temporarily zero
 them out.</p>
 <div class="sourceCode" id="cb13"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>mod <span class="ot">&lt;-</span> <span class="fu">modlib</span>(<span class="st">&quot;popex&quot;</span>) <span class="sc">%&gt;%</span> <span class="fu">update</span>(<span class="at">end=</span><span class="dv">96</span>) <span class="sc">%&gt;%</span> <span class="fu">Req</span>(DV,CL,V)</span></code></pre></div>
-<pre><code>. Building popex ... done.</code></pre>
+<pre><code>. Loading model from cache.</code></pre>
 <div class="sourceCode" id="cb15"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="fu">omat</span>(mod)</span></code></pre></div>
 <pre><code>. $...
 .       [,1] [,2] [,3]
