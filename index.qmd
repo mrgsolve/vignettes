@@ -18,7 +18,8 @@ The purpose of the vignettes page is to provide documentation
 for use of stable and core features of the package. There may be content overlap 
 in the vignette and [blog](https://mrgsolve.github.io/blog) content Feel free 
 to comment on any of the content or report other issues in the issue tracker. 
-The source code for all posts can be found here.
+The source code for all posts can be found 
+[here](https://github.com/mrgsolve/vignettes).
 
 <hr></hr>
 
