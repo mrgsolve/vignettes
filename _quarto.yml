@@ -33,6 +33,8 @@ website:
           - text: Report an issue
             href: https://github.com/metrumresearchgroup/mrgsolve/issues
     right:
+      - text: mrgsolve.org
+        href: https://mrgsolve.org
       - icon: github
         href: https://github.com/metrumresearchgroup/mrgsolve
       - icon: twitter

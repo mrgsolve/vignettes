@@ -180,6 +180,9 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
   </li>
 </ul>
             <ul class="navbar-nav navbar-nav-scroll ms-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="https://mrgsolve.org">mrgsolve.org</a>
+  </li>  
   <li class="nav-item compact">
     <a class="nav-link" href="https://github.com/metrumresearchgroup/mrgsolve"><i class="bi bi-github" role="img">
 </i> 
@@ -300,24 +303,24 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <span id="cb4-4"><a href="#cb4-4"></a>})</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>.    user  system elapsed 
-.   0.037   0.000   0.038</code></pre>
+.   0.039   0.000   0.040</code></pre>
 </div>
 <div class="sourceCode cell-code" id="cb6"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1"></a><span class="fu">print</span>(sum)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>.        ID              time      RESPONSE            EBASE         
-.  Min.   :  1.00   Min.   :0   Min.   :   6.325   Min.   :-2.76071  
-.  1st Qu.: 25.75   1st Qu.:0   1st Qu.:  49.335   1st Qu.:-0.70654  
-.  Median : 50.50   Median :0   Median : 109.908   Median : 0.09416  
-.  Mean   : 50.50   Mean   :0   Mean   : 196.898   Mean   : 0.07200  
-.  3rd Qu.: 75.25   3rd Qu.:0   3rd Qu.: 239.770   3rd Qu.: 0.87433  
-.  Max.   :100.00   Max.   :0   Max.   :1773.151   Max.   : 2.87534  
-.       BASE         
-.  Min.   :   6.325  
-.  1st Qu.:  49.335  
-.  Median : 109.908  
-.  Mean   : 196.898  
-.  3rd Qu.: 239.770  
-.  Max.   :1773.151</code></pre>
+<pre><code>.        ID              time      RESPONSE           EBASE         
+.  Min.   :  1.00   Min.   :0   Min.   :  10.17   Min.   :-2.28606  
+.  1st Qu.: 25.75   1st Qu.:0   1st Qu.:  59.15   1st Qu.:-0.52515  
+.  Median : 50.50   Median :0   Median :  91.78   Median :-0.08574  
+.  Mean   : 50.50   Mean   :0   Mean   : 158.05   Mean   : 0.01097  
+.  3rd Qu.: 75.25   3rd Qu.:0   3rd Qu.: 187.85   3rd Qu.: 0.63047  
+.  Max.   :100.00   Max.   :0   Max.   :1460.07   Max.   : 2.68107  
+.       BASE        
+.  Min.   :  10.17  
+.  1st Qu.:  59.15  
+.  Median :  91.78  
+.  Mean   : 158.05  
+.  3rd Qu.: 187.85  
+.  Max.   :1460.07</code></pre>
 </div>
 </div>
 <p>When we simulate with <code>FLAG=0</code>, the <code>simeta</code> code <strong>isn’t</strong> called and we <code>BASE</code> values all over the place.</p>
@@ -331,24 +334,24 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <span id="cb8-4"><a href="#cb8-4"></a>})</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>.    user  system elapsed 
-.   0.005   0.000   0.005</code></pre>
+.   0.005   0.000   0.004</code></pre>
 </div>
 <div class="sourceCode cell-code" id="cb10"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1"></a><span class="fu">print</span>(sum)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>.        ID              time      RESPONSE          EBASE         
-.  Min.   :  1.00   Min.   :0   Min.   : 80.04   Min.   :-0.22269  
-.  1st Qu.: 25.75   1st Qu.:0   1st Qu.: 88.03   1st Qu.:-0.12747  
-.  Median : 50.50   Median :0   Median : 94.93   Median :-0.05204  
-.  Mean   : 50.50   Mean   :0   Mean   : 96.56   Mean   :-0.04129  
-.  3rd Qu.: 75.25   3rd Qu.:0   3rd Qu.:104.07   3rd Qu.: 0.03987  
-.  Max.   :100.00   Max.   :0   Max.   :119.44   Max.   : 0.17766  
+.  Min.   :  1.00   Min.   :0   Min.   : 80.07   Min.   :-0.22232  
+.  1st Qu.: 25.75   1st Qu.:0   1st Qu.: 90.50   1st Qu.:-0.09984  
+.  Median : 50.50   Median :0   Median : 97.22   Median :-0.02824  
+.  Mean   : 50.50   Mean   :0   Mean   : 99.30   Mean   :-0.01408  
+.  3rd Qu.: 75.25   3rd Qu.:0   3rd Qu.:110.28   3rd Qu.: 0.09787  
+.  Max.   :100.00   Max.   :0   Max.   :119.36   Max.   : 0.17699  
 .       BASE       
-.  Min.   : 80.04  
-.  1st Qu.: 88.03  
-.  Median : 94.93  
-.  Mean   : 96.56  
-.  3rd Qu.:104.07  
-.  Max.   :119.44</code></pre>
+.  Min.   : 80.07  
+.  1st Qu.: 90.50  
+.  Median : 97.22  
+.  Mean   : 99.30  
+.  3rd Qu.:110.28  
+.  Max.   :119.36</code></pre>
 </div>
 </div>
 <p>When we simulate with <code>FLAG=1</code>, the <code>simeta</code> code <strong>is</strong> called and we <code>BASE</code> values within the specified bounds.</p>
@@ -401,13 +404,13 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </div>
 <div class="sourceCode cell-code" id="cb17"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1"></a><span class="fu">print</span>(sum)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>.        ID         time            CENT              CP          
-.  Min.   :1   Min.   : 0.00   Min.   :  0.00   Min.   :-15.8385  
-.  1st Qu.:1   1st Qu.:11.25   1st Qu.: 15.93   1st Qu.: -0.8774  
-.  Median :1   Median :23.50   Median : 29.38   Median :  3.5281  
-.  Mean   :1   Mean   :23.52   Mean   : 37.47   Mean   :  3.3644  
-.  3rd Qu.:1   3rd Qu.:35.75   3rd Qu.: 54.21   3rd Qu.:  6.9420  
-.  Max.   :1   Max.   :48.00   Max.   :100.00   Max.   : 21.0483</code></pre>
+<pre><code>.        ID         time            CENT              CP         
+.  Min.   :1   Min.   : 0.00   Min.   :  0.00   Min.   :-10.062  
+.  1st Qu.:1   1st Qu.:11.25   1st Qu.: 15.93   1st Qu.: -1.877  
+.  Median :1   Median :23.50   Median : 29.38   Median :  2.079  
+.  Mean   :1   Mean   :23.52   Mean   : 37.47   Mean   :  2.237  
+.  3rd Qu.:1   3rd Qu.:35.75   3rd Qu.: 54.21   3rd Qu.:  6.247  
+.  Max.   :1   Max.   :48.00   Max.   :100.00   Max.   : 23.121</code></pre>
 </div>
 </div>
 <p><strong>Negative</strong> concentrations are simulated when we <strong>don’t</strong> call the <code>simeps</code> loop.</p>
@@ -421,17 +424,17 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <span id="cb19-4"><a href="#cb19-4"></a>})</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>   user  system elapsed 
-  0.035   0.001   0.036 </code></pre>
+  0.034   0.000   0.034 </code></pre>
 </div>
 <div class="sourceCode cell-code" id="cb21"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1"></a><span class="fu">print</span>(sum)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>       ID         time            CENT              CP          
- Min.   :1   Min.   : 0.00   Min.   :  0.00   Min.   : 0.01046  
- 1st Qu.:1   1st Qu.:11.25   1st Qu.: 15.93   1st Qu.: 3.12675  
- Median :1   Median :23.50   Median : 29.38   Median : 6.38530  
- Mean   :1   Mean   :23.52   Mean   : 37.47   Mean   : 6.99933  
- 3rd Qu.:1   3rd Qu.:35.75   3rd Qu.: 54.21   3rd Qu.:11.50485  
- Max.   :1   Max.   :48.00   Max.   :100.00   Max.   :17.46165  </code></pre>
+<pre><code>       ID         time            CENT              CP         
+ Min.   :1   Min.   : 0.00   Min.   :  0.00   Min.   : 0.3097  
+ 1st Qu.:1   1st Qu.:11.25   1st Qu.: 15.93   1st Qu.: 2.9494  
+ Median :1   Median :23.50   Median : 29.38   Median : 5.1020  
+ Mean   :1   Mean   :23.52   Mean   : 37.47   Mean   : 6.2490  
+ 3rd Qu.:1   3rd Qu.:35.75   3rd Qu.: 54.21   3rd Qu.: 8.3757  
+ Max.   :1   Max.   :48.00   Max.   :100.00   Max.   :19.4867  </code></pre>
 </div>
 </div>
 <p>Better … all concentrations are positive.</p>
