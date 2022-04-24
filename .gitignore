@@ -1,5 +1,6 @@
 source/mrgsolve_builds/
-
+.DS_store
+source/.DS_Store
 # History files
 .Rhistory
 .Rapp.history
@@ -45,3 +46,5 @@ docs/build/
 # Shiny token, see https://shiny.rstudio.com/articles/shinyapps.html
 rsconnect/
 .Rproj.user
+
+/.quarto/

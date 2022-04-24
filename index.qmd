@@ -1,0 +1,35 @@
+---
+title: ""
+toc: false
+---
+
+
+# mrgsolve vignettes  <img src="MRG-Solve-Hex.png" align="right" width="150px"></img>
+
+mrgsolve is an R package for simulation from hierarchical, ordinary differential 
+equation (ODE) based models typically employed in drug development.
+
+This website contains (hopefully) helpful vignettes to help you learn and 
+use mrgsolve to get your simulation work done.  We keep the vignettes here
+rather than in the package so they can be better maintained and 
+kept up to date.
+
+The purpose of the vignettes page is to provide documentation 
+for use of stable and core features of the package. There may be content overlap 
+in the vignette and [blog](https://mrgsolve.github.io/blog) content Feel free 
+to comment on any of the content or report other issues in the issue tracker. 
+The source code for all posts can be found here.
+
+<hr></hr>
+
+
+# Content
+
+- [Get started](01-get-started.html)
+- [Event objects](events.html)
+- [Set initial conditions](init.html)
+- [Model without compartments](dollar_pred.html)
+- [Resimulate random effects](simeta.html)
+- [Modeled events](mevent.html)
+- [Quick hit demos](quick.html)
+
