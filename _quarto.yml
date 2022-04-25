@@ -3,7 +3,7 @@ project:
   output-dir: docs
 
 website:
-  title: "mrgsolve vignettes"
+  title: "mrgsolve/vignettes"
   navbar:
     background: "white"
     foreground: "#797979"
