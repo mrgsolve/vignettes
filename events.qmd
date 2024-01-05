@@ -3,7 +3,7 @@ title: "Work with event objects"
 ---
 
 
-```{r, echo = FALSE, message = FALSE, warning = FALSE,code = readLines("global.R")}
+```{r, echo = FALSE, message = FALSE, warning = FALSE, code = readLines("global.R")}
 ```
 
 ```{r}
